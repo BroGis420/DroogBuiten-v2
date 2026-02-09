@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { dutchCities, allDutchPlaces, fetchAllCitiesWeather, getWeatherIcon } from "@/lib/weather";
+import { dutchCities, allDutchPlaces, fetchAllCitiesWeather, fetchCityWeather, getWeatherIcon } from "@/lib/weather";
 import { useTheme } from "@/lib/theme";
 import { ThemeToggle, ThemeToggleCompact } from "@/components/ThemeToggle";
 
@@ -21,7 +21,11 @@ function WeatherIcon({ type }: { type: string }) {
   if (type === "cloudy" || type === "partly-cloudy") {
     return (
       <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M4 14a4 4 0 014-4 4 4 0 013.5 2A3.5 3.5 0 0118 13.5a3.5 3.5 0 01-3.5 3.5H8a4 4 0 01-4-3z" />
+        <path d="M17.5,19c-3.037,0-5.5-2.463-5.5-5.5c0-3.037,2.463-5.5,5.5-5.5c3.037,0,5.5,2.463,5.5,5.5C23,16.537,20.537,19,17.5,19z M17.5,9.5c-2.206,0-4,1.794-4,4c0,2.206,1.794,4,4,4c2.206,0,4-1.794,4-4C21.5,11.294,19.706,9.5,17.5,9.5z" opacity=".2" />
+        <path d="M17.5,19c-3.037,0-5.5-2.463-5.5-5.5c0-3.037,2.463-5.5,5.5-5.5c3.037,0,5.5,2.463,5.5,5.5C23,16.537,20.537,19,17.5,19z" opacity=".2" />
+        <path d="M17.5,6c-1.724,0-3.355,0.795-4.426,2.169C12.446,7.864,11.758,7.75,11,7.75c-3.176,0-5.75,2.574-5.75,5.75c0,2.716,1.906,4.986,4.464,5.615L17.5,19c3.037,0,5.5-2.463,5.5-5.5C23,10.463,20.537,8,17.5,8V6z" />
+        <path d="M11,19.25c-0.12,0-0.24-0.009-0.358-0.026C10.849,19.239,11.02,19.25,11,19.25z" />
+        <path d="M6.5,18.75c-3.176,0-5.75-2.574-5.75-5.75c0-3.176,2.574-5.75,5.75-5.75c0.758,0,1.446,0.114,2.074,0.419C9.674,5.925,11.305,5.13,13.029,5.13c3.584,0,6.5,2.916,6.5,6.5c0,0.175-0.011,0.347-0.026,0.518C19.74,12.051,19.967,12,20.199,12c2.099,0,3.8,1.701,3.8,3.8s-1.701,3.8-3.8,3.8H6.5z" />
       </svg>
     );
   }
@@ -86,30 +90,25 @@ function DayParticles() {
 // Sun rays for day mode
 function SunRays() {
   const rays = Array.from({ length: 12 }).map((_, i) => ({
-    angle: (i * 30) - 60, // Spread rays from -60 to 270 degrees
+    angle: (i * 30) - 60,
     delay: i * 0.3,
     length: 200 + Math.random() * 150,
   }));
 
   return (
     <div className="fixed top-0 right-0 pointer-events-none z-0">
-      {/* Sun glow */}
       <div
         className="absolute -top-20 -right-20 w-64 h-64 rounded-full animate-sun-glow"
         style={{
           background: 'radial-gradient(circle, rgba(251,191,36,0.4) 0%, rgba(251,191,36,0.1) 40%, transparent 70%)',
         }}
       />
-
-      {/* Sun core */}
       <div
         className="absolute -top-8 -right-8 w-32 h-32 rounded-full animate-sun-glow"
         style={{
           background: 'radial-gradient(circle, rgba(253,224,71,0.6) 0%, rgba(251,191,36,0.3) 50%, transparent 70%)',
         }}
       />
-
-      {/* Rays */}
       {rays.map((ray, i) => (
         <div
           key={i}
@@ -131,9 +130,6 @@ function SunRays() {
   );
 }
 
-// Get unique provinces sorted
-const provinces = [...new Set(allDutchPlaces.map(p => p.province))].sort();
-
 interface CityWeather {
   slug: string;
   name: string;
@@ -150,22 +146,106 @@ export default function Home() {
   const isDark = theme === "dark";
   const [searchValue, setSearchValue] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
-  const [saveLocation, setSaveLocation] = useState(true);
+  // saveLocation state removed as it was unused logic (we always save)
   const [showCookieBanner, setShowCookieBanner] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [citiesWeather, setCitiesWeather] = useState<CityWeather[]>([]);
   const [loadingWeather, setLoadingWeather] = useState(true);
-  const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
-  const [showAllLocations, setShowAllLocations] = useState(false);
+  const [loadingGPS, setLoadingGPS] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
+  // Function to calculate distance between two coordinates (Haversine formula)
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371; // Earth's radius in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  // GPS handler function
+  const handleUseGPS = () => {
+    if (!navigator.geolocation) {
+      alert('GPS wordt niet ondersteund door je browser');
+      return;
+    }
+
+    setLoadingGPS(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLat = position.coords.latitude;
+        const userLon = position.coords.longitude;
+
+        // Find nearest city
+        let nearestCity = allDutchPlaces[0];
+        let shortestDistance = Infinity;
+
+        allDutchPlaces.forEach((place) => {
+          const distance = calculateDistance(userLat, userLon, place.lat, place.lon);
+          if (distance < shortestDistance) {
+            shortestDistance = distance;
+            nearestCity = place;
+          }
+        });
+
+        localStorage.setItem('lastVisitedCity', nearestCity.slug);
+        setLoadingGPS(false);
+        router.push(`/stad/${nearestCity.slug}`);
+      },
+      (error) => {
+        setLoadingGPS(false);
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            alert('Locatietoegang geweigerd. Geef toestemming in je browserinstellingen.');
+            break;
+          case error.POSITION_UNAVAILABLE:
+            alert('Locatie niet beschikbaar.');
+            break;
+          case error.TIMEOUT:
+            alert('Locatieverzoek verlopen. Probeer opnieuw.');
+            break;
+          default:
+            alert('Er is een fout opgetreden bij het ophalen van je locatie.');
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  };
+
   useEffect(() => {
-    setMounted(true);
-    fetchAllCitiesWeather().then((data) => {
-      setCitiesWeather(data);
+    const loadCities = async () => {
+      // 1. Fetch standard cities
+      const standardCities = await fetchAllCitiesWeather();
+
+      // 2. Check for last visited city
+      const lastVisitedSlug = localStorage.getItem('lastVisitedCity');
+
+      if (lastVisitedSlug) {
+        // Fetch specific weather for this city
+        const lastVisitedWeather = await fetchCityWeather(lastVisitedSlug);
+
+        if (lastVisitedWeather) {
+          // Filter duplicates: remove the last visited city from standard list if present
+          const uniqueStandardCities = standardCities.filter(c => c.slug !== lastVisitedSlug);
+
+          // Prepend last visited city and limit to 6 items
+          setCitiesWeather([lastVisitedWeather, ...uniqueStandardCities].slice(0, 6));
+          setLoadingWeather(false);
+          return;
+        }
+      }
+
+      // Fallback: just show standard cities
+      setCitiesWeather(standardCities);
       setLoadingWeather(false);
-    });
+    };
+
+    setMounted(true);
+    loadCities();
   }, []);
 
   useEffect(() => {
@@ -180,11 +260,12 @@ export default function Home() {
 
   const filteredPlaces = searchValue.length > 0
     ? allDutchPlaces.filter((place) =>
-        place.name.toLowerCase().includes(searchValue.toLowerCase())
-      ).slice(0, 10)
+      place.name.toLowerCase().includes(searchValue.toLowerCase())
+    ).slice(0, 10)
     : [];
 
   const handleSelectPlace = (slug: string) => {
+    localStorage.setItem('lastVisitedCity', slug);
     setShowDropdown(false);
     setSearchValue("");
     router.push(`/stad/${slug}`);
@@ -195,11 +276,6 @@ export default function Home() {
       handleSelectPlace(filteredPlaces[0].slug);
     }
   };
-
-  // Get places for selected province
-  const provincePlaces = selectedProvince
-    ? allDutchPlaces.filter(p => p.province === selectedProvince).sort((a, b) => a.name.localeCompare(b.name))
-    : [];
 
   const avgTemp = citiesWeather.length > 0
     ? Math.round(citiesWeather.reduce((a, b) => a + b.temperature, 0) / citiesWeather.length)
@@ -351,383 +427,227 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* Main Content */}
-      <main className="relative z-10 pt-32 sm:pt-40 pb-20 px-6">
-        <div className="container mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center min-h-[70vh]">
-            {/* Left Column - Hero Text */}
-            <div className="lg:col-span-6 flex flex-col items-center lg:items-start text-center lg:text-left">
-              {/* Floating weather badge */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-8"
-              >
-                <div className={`w-2 h-2 rounded-full animate-pulse ${isDark ? 'bg-emerald-400' : 'bg-amber-500'}`} />
-                <span className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-white/70' : 'text-sky-700'}`}>
-                  {loadingWeather ? "Laden..." : `Droogscore: ${avgDryingScore}%`}
-                </span>
-              </motion.div>
+      {/* Main Content - Reorganized for better UX */}
+      <main className="relative z-10 pt-28 sm:pt-32 pb-20 px-6">
+        <div className="container mx-auto max-w-5xl">
 
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.85] mb-8"
-              >
-                <span className={`block ${isDark ? 'text-white' : 'text-sky-950'}`}>Kan ik mijn</span>
-                <span className={`block ${isDark ? 'text-white' : 'text-sky-950'}`}>was buiten</span>
-                <span className={`block ${isDark ? 'text-white' : 'text-sky-950'}`}>drogen</span>
-                <span className="block animate-text-shimmer">vandaag?</span>
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className={`font-medium text-xl sm:text-2xl mb-12 max-w-lg leading-relaxed ${isDark ? 'text-white/60' : 'text-sky-800/70'}`}
-              >
-                Een wetenschappelijke wasdroogvoorspeller voor het moderne huishouden. Stop met gissen, begin met drogen.
-              </motion.p>
-
-              {/* Search Input with Dropdown */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="w-full max-w-lg"
-                ref={searchRef}
-              >
-                <div className="relative group">
-                  <div className={`absolute -inset-1 rounded-3xl blur-lg opacity-30 group-hover:opacity-60 transition-opacity duration-500 animate-gradient ${isDark ? 'bg-gradient-to-r from-cyan-500 via-emerald-500 to-cyan-500' : 'bg-gradient-to-r from-sky-400 via-amber-400 to-sky-400'}`} />
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={searchValue}
-                      onChange={(e) => {
-                        setSearchValue(e.target.value);
-                        setShowDropdown(e.target.value.length > 0);
-                      }}
-                      onFocus={() => searchValue.length > 0 && setShowDropdown(true)}
-                      onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                      placeholder="Voer Stad of Gemeente in..."
-                      className="w-full px-8 py-6 rounded-2xl modern-input text-lg font-medium outline-none"
-                    />
-                    <button
-                      onClick={handleSearch}
-                      className={`absolute right-3 top-1/2 -translate-y-1/2 p-3 rounded-xl hover:scale-105 active:scale-95 transition-all duration-300 ${isDark ? 'bg-gradient-to-r from-cyan-500 to-emerald-500 hover:shadow-lg hover:shadow-cyan-500/30' : 'bg-gradient-to-r from-amber-400 to-amber-500 hover:shadow-lg hover:shadow-amber-500/30'}`}
-                    >
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                      </svg>
-                    </button>
-                  </div>
-
-                  {/* Dropdown */}
-                  <AnimatePresence>
-                    {showDropdown && filteredPlaces.length > 0 && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute top-full left-0 right-0 mt-2 rounded-2xl glass-card overflow-hidden z-50"
-                      >
-                        {filteredPlaces.map((place, index) => (
-                          <motion.button
-                            key={place.slug}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.05 }}
-                            onClick={() => handleSelectPlace(place.slug)}
-                            className={`w-full px-6 py-4 flex items-center justify-between transition-colors last:border-0 group ${isDark ? 'hover:bg-white/10 border-b border-white/5' : 'hover:bg-sky-100 border-b border-sky-100'}`}
-                          >
-                            <div className="flex items-center gap-3">
-                              <svg className={`w-5 h-5 ${isDark ? 'text-cyan-400' : 'text-sky-600'}`} fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                              </svg>
-                              <div className="text-left">
-                                <span className={`font-bold block ${isDark ? 'text-white' : 'text-sky-900'}`}>{place.name}</span>
-                                <span className={`text-xs ${isDark ? 'text-white/40' : 'text-sky-600/60'}`}>{place.province}</span>
-                              </div>
-                            </div>
-                            <svg className={`w-4 h-4 group-hover:translate-x-1 transition-all ${isDark ? 'text-white/30 group-hover:text-cyan-400' : 'text-sky-300 group-hover:text-sky-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </motion.button>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Options */}
-                <div className="flex items-center justify-center lg:justify-start gap-8 mt-6">
-                  <label className="flex items-center gap-3 cursor-pointer group">
-                    <div className="relative">
-                      <input
-                        type="checkbox"
-                        checked={saveLocation}
-                        onChange={() => setSaveLocation(!saveLocation)}
-                        className="sr-only peer"
-                      />
-                      <div className={`w-5 h-5 rounded-md border-2 transition-all duration-300 flex items-center justify-center ${isDark ? 'border-white/30 peer-checked:border-cyan-500 peer-checked:bg-cyan-500' : 'border-sky-300 peer-checked:border-sky-500 peer-checked:bg-sky-500'} ${saveLocation ? (isDark ? 'border-cyan-500 bg-cyan-500' : 'border-sky-500 bg-sky-500') : ''}`}>
-                        {saveLocation && (
-                          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        )}
-                      </div>
-                    </div>
-                    <span className={`text-xs font-bold uppercase tracking-wider transition-colors ${isDark ? 'text-white/50 group-hover:text-white/80' : 'text-sky-700/70 group-hover:text-sky-800'}`}>Thuislocatie Opslaan</span>
-                  </label>
-
-                  <button className={`font-bold text-xs uppercase tracking-widest flex items-center gap-2 transition-all duration-300 hover:scale-105 active:scale-95 ${isDark ? 'text-cyan-400 hover:text-cyan-300' : 'text-sky-600 hover:text-sky-500'}`}>
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                    </svg>
-                    GPS Gebruiken
-                  </button>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Right Column - City Cards */}
-            <div className="lg:col-span-6">
-              <div className="grid grid-cols-2 gap-4">
-                {(citiesWeather.length > 0 ? citiesWeather : dutchCities.map(c => ({ ...c, temperature: 0, humidity: 0, dryingScore: 0, weatherCode: 0, isDayTime: true }))).map((city, index) => (
-                  <motion.div
-                    key={city.slug}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.4 + index * 0.1 }}
-                  >
-                    <Link
-                      href={`/stad/${city.slug}`}
-                      className="group p-6 sm:p-8 glass-card rounded-3xl text-left overflow-hidden relative block"
-                    >
-                      {/* Hover gradient */}
-                      <div className={`absolute inset-0 transition-all duration-500 ${isDark ? 'bg-gradient-to-br from-cyan-500/0 to-emerald-500/0 group-hover:from-cyan-500/10 group-hover:to-emerald-500/10' : 'bg-gradient-to-br from-sky-400/0 to-sky-300/0 group-hover:from-sky-400/10 group-hover:to-sky-300/10'}`} />
-
-                      {/* Weather indicator */}
-                      <div className="absolute top-4 right-4 opacity-50 group-hover:opacity-100 transition-opacity duration-300">
-                        {!loadingWeather && <WeatherIcon type={getWeatherIcon(city.weatherCode, city.isDayTime)} />}
-                      </div>
-
-                      <div className="relative z-10">
-                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-300 ${isDark ? 'text-white/40 group-hover:text-cyan-400' : 'text-sky-700/60 group-hover:text-sky-600'}`}>
-                          {loadingWeather ? "Laden..." : `${city.dryingScore}% droogscore`}
-                        </span>
-                        <h3 className={`text-xl sm:text-2xl font-black mt-2 transition-colors duration-300 ${isDark ? 'text-white group-hover:text-cyan-400' : 'text-sky-950 group-hover:text-sky-700'}`}>
-                          {city.name}
-                        </h3>
-
-                        {!loadingWeather && (
-                          <div className={`flex items-center gap-3 mt-2 text-sm ${isDark ? 'text-white/50' : 'text-sky-700/70'}`}>
-                            <span>{city.temperature}°C</span>
-                            <span className={`w-1 h-1 rounded-full ${isDark ? 'bg-white/30' : 'bg-sky-400/50'}`} />
-                            <span>{city.humidity}%</span>
-                          </div>
-                        )}
-
-                        {/* Arrow indicator */}
-                        <div className={`absolute bottom-6 right-6 w-10 h-10 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300 ${isDark ? 'bg-white/5' : 'bg-sky-100'}`}>
-                          <svg className={`w-5 h-5 ${isDark ? 'text-cyan-400' : 'text-sky-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                          </svg>
-                        </div>
-                      </div>
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Stats bar */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
-                className="mt-6 p-4 glass-card rounded-2xl flex items-center justify-around"
-              >
-                <div className="text-center">
-                  <div className={`text-2xl font-black ${isDark ? 'text-cyan-400' : 'text-sky-600'}`}>{loadingWeather ? "--" : `${avgTemp}°C`}</div>
-                  <div className={`text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-white/40' : 'text-sky-700/60'}`}>Gem. Temp</div>
-                </div>
-                <div className={`w-px h-10 ${isDark ? 'bg-white/10' : 'bg-sky-200'}`} />
-                <div className="text-center">
-                  <div className={`text-2xl font-black ${isDark ? 'text-emerald-400' : 'text-sky-500'}`}>{loadingWeather ? "--" : `${avgHumidity}%`}</div>
-                  <div className={`text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-white/40' : 'text-sky-700/60'}`}>Vochtigheid</div>
-                </div>
-                <div className={`w-px h-10 ${isDark ? 'bg-white/10' : 'bg-sky-200'}`} />
-                <div className="text-center">
-                  <div className={`text-2xl font-black ${isDark ? 'text-yellow-400' : 'text-amber-500'}`}>{loadingWeather ? "--" : `${avgDryingScore}%`}</div>
-                  <div className={`text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-white/40' : 'text-sky-700/60'}`}>Droogscore</div>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-
-          {/* Browse All Locations Section */}
+          {/* Hero Section - Compact & Focused */}
           <motion.section
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="mt-24"
+            className="text-center mb-10"
           >
-            <div className="text-center mb-8">
-              <h2 className={`text-3xl sm:text-4xl font-black tracking-tighter mb-4 ${isDark ? 'text-white' : 'text-sky-950'}`}>
-                Alle {allDutchPlaces.length}+ <span className="animate-text-shimmer">locaties</span>
-              </h2>
-              <p className={`max-w-xl mx-auto ${isDark ? 'text-white/60' : 'text-sky-800/70'}`}>
-                Selecteer je provincie en vind je gemeente. Weer is lokaal, dus kies de dichtstbijzijnde plaats voor de meest accurate voorspelling.
-              </p>
-            </div>
+            {/* Live status badge */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6"
+            >
+              <div className={`w-2 h-2 rounded-full animate-pulse ${isDark ? 'bg-emerald-400' : 'bg-amber-500'}`} />
+              <span className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-white/70' : 'text-sky-700'}`}>
+                {loadingWeather ? "Weer laden..." : `Landelijk gemiddelde: ${avgDryingScore}% droogscore`}
+              </span>
+            </motion.div>
 
-            {/* Province Selector */}
-            <div className="flex flex-wrap justify-center gap-2 mb-8">
-              {provinces.map((province) => (
+            {/* Main headline - Compact */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter leading-[0.9] mb-4">
+              <span className={isDark ? 'text-white' : 'text-sky-950'}>Kan ik mijn was </span>
+              <span className="animate-text-shimmer">buiten drogen?</span>
+            </h1>
+
+            <p className={`font-medium text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed ${isDark ? 'text-white/60' : 'text-sky-800/70'}`}>
+              Slimme wasdroogvoorspeller voor {allDutchPlaces.length}+ Nederlandse locaties
+            </p>
+          </motion.section>
+
+          {/* Search Section - Primary Action */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="max-w-xl mx-auto mb-16"
+            ref={searchRef}
+          >
+            <div className="relative group">
+              <div className={`absolute -inset-2 rounded-3xl blur-xl opacity-50 group-hover:opacity-80 transition-opacity duration-500 animate-gradient ${isDark ? 'bg-gradient-to-r from-cyan-500 via-emerald-500 to-cyan-500' : 'bg-gradient-to-r from-sky-400 via-amber-400 to-sky-400'}`} />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchValue}
+                  onChange={(e) => {
+                    setSearchValue(e.target.value);
+                    setShowDropdown(e.target.value.length > 0);
+                  }}
+                  onFocus={() => searchValue.length > 0 && setShowDropdown(true)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                  placeholder="Zoek je stad of gemeente..."
+                  className="w-full px-8 py-6 rounded-2xl modern-input text-lg font-semibold outline-none"
+                />
                 <button
-                  key={province}
-                  onClick={() => setSelectedProvince(selectedProvince === province ? null : province)}
-                  className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 ${
-                    selectedProvince === province
-                      ? isDark
-                        ? "bg-gradient-to-r from-cyan-500 to-emerald-500 text-black"
-                        : "bg-gradient-to-r from-sky-500 to-sky-400 text-white"
-                      : isDark
-                        ? "glass-card text-white/70 hover:text-white hover:bg-white/10"
-                        : "bg-white/70 text-sky-800 hover:bg-white border border-sky-200"
-                  }`}
+                  onClick={handleSearch}
+                  className={`absolute right-4 top-1/2 -translate-y-1/2 p-4 rounded-xl hover:scale-110 active:scale-95 transition-all duration-300 ${isDark ? 'bg-gradient-to-r from-cyan-500 to-emerald-500 hover:shadow-xl hover:shadow-cyan-500/40' : 'bg-gradient-to-r from-amber-400 to-amber-500 hover:shadow-xl hover:shadow-amber-500/40'}`}
                 >
-                  {province}
-                </button>
-              ))}
-            </div>
-
-            {/* Places Grid */}
-            <AnimatePresence mode="wait">
-              {selectedProvince && (
-                <motion.div
-                  key={selectedProvince}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="glass-card rounded-3xl p-6 sm:p-8"
-                >
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className={`text-xl font-black ${isDark ? 'text-white' : 'text-sky-950'}`}>
-                      {selectedProvince}
-                      <span className={`ml-2 text-sm font-normal ${isDark ? 'text-white/50' : 'text-sky-700/60'}`}>
-                        ({provincePlaces.length} plaatsen)
-                      </span>
-                    </h3>
-                    <button
-                      onClick={() => setSelectedProvince(null)}
-                      className={`p-2 rounded-full transition-colors ${isDark ? 'hover:bg-white/10 text-white/50 hover:text-white' : 'hover:bg-sky-100 text-sky-600'}`}
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                    {provincePlaces.map((place, index) => (
-                      <motion.div
-                        key={place.slug}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: index * 0.02 }}
-                      >
-                        <Link
-                          href={`/stad/${place.slug}`}
-                          className={`block p-4 rounded-xl text-center transition-all duration-300 group ${
-                            isDark
-                              ? "bg-white/5 hover:bg-white/10 border border-white/10 hover:border-cyan-500/50"
-                              : "bg-white/50 hover:bg-white border border-sky-100 hover:border-sky-300"
-                          }`}
-                        >
-                          <span className={`font-bold text-sm block truncate ${isDark ? 'text-white group-hover:text-cyan-400' : 'text-sky-900 group-hover:text-sky-600'}`}>
-                            {place.name}
-                          </span>
-                          <span className={`text-xs ${isDark ? 'text-white/40' : 'text-sky-600/60'}`}>
-                            Bekijk score
-                          </span>
-                        </Link>
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Show all locations toggle when no province is selected */}
-            {!selectedProvince && (
-              <div className="text-center">
-                <button
-                  onClick={() => setShowAllLocations(!showAllLocations)}
-                  className={`px-6 py-3 rounded-full font-bold transition-all duration-300 ${
-                    isDark
-                      ? "glass-card text-white/70 hover:text-white hover:bg-white/10"
-                      : "bg-white/70 text-sky-800 hover:bg-white border border-sky-200"
-                  }`}
-                >
-                  {showAllLocations ? "Verberg alle locaties" : "Bekijk alle locaties alfabetisch"}
-                  <svg
-                    className={`w-4 h-4 ml-2 inline-block transition-transform ${showAllLocations ? "rotate-180" : ""}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </button>
-
-                <AnimatePresence>
-                  {showAllLocations && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="mt-6 glass-card rounded-3xl p-6 sm:p-8 overflow-hidden"
-                    >
-                      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-                        {[...allDutchPlaces].sort((a, b) => a.name.localeCompare(b.name)).map((place) => (
-                          <Link
-                            key={place.slug}
-                            href={`/stad/${place.slug}`}
-                            className={`p-2 rounded-lg text-center text-sm transition-all duration-200 truncate ${
-                              isDark
-                                ? "hover:bg-white/10 text-white/70 hover:text-cyan-400"
-                                : "hover:bg-sky-100 text-sky-800 hover:text-sky-600"
-                            }`}
-                          >
-                            {place.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
-            )}
+
+              {/* Dropdown */}
+              <AnimatePresence>
+                {showDropdown && filteredPlaces.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className={`absolute top-full left-0 right-0 mt-2 rounded-2xl overflow-hidden z-50 max-h-80 overflow-y-auto shadow-2xl border ${isDark ? 'bg-slate-900 border-slate-700' : 'bg-white border-sky-200'}`}
+                  >
+                    {filteredPlaces.map((place, index) => (
+                      <motion.button
+                        key={place.slug}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: Math.min(index * 0.03, 0.3) }}
+                        onClick={() => handleSelectPlace(place.slug)}
+                        className={`w-full px-6 py-3 flex items-center justify-between transition-colors group ${isDark ? 'hover:bg-cyan-500/20 border-b border-slate-700/50' : 'hover:bg-sky-50 border-b border-sky-100'}`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <svg className={`w-5 h-5 ${isDark ? 'text-cyan-400' : 'text-sky-600'}`} fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                          </svg>
+                          <div className="text-left">
+                            <span className={`font-semibold block ${isDark ? 'text-white' : 'text-slate-900'}`}>{place.name}</span>
+                            <span className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{place.province}</span>
+                          </div>
+                        </div>
+                        <svg className={`w-4 h-4 group-hover:translate-x-1 transition-all ${isDark ? 'text-slate-500 group-hover:text-cyan-400' : 'text-slate-300 group-hover:text-sky-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </motion.button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Quick actions below search */}
+            <div className="flex items-center justify-center gap-6 mt-4">
+
+
+              <button
+                onClick={handleUseGPS}
+                disabled={loadingGPS}
+                className={`font-medium text-xs flex items-center gap-1.5 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed ${isDark ? 'text-cyan-400 hover:text-cyan-300' : 'text-sky-600 hover:text-sky-500'}`}
+              >
+                {loadingGPS ? (
+                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                  </svg>
+                )}
+                {loadingGPS ? 'Locatie ophalen...' : 'Gebruik GPS'}
+              </button>
+            </div>
           </motion.section>
+
+
+
+          {/* City Cards Section */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <div className="text-center mb-6">
+              <h2 className={`text-sm font-bold uppercase tracking-widest ${isDark ? 'text-white/40' : 'text-sky-700/60'}`}>
+                Populaire steden
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {(citiesWeather.length > 0 ? citiesWeather : dutchCities.map(c => ({ ...c, temperature: 0, humidity: 0, dryingScore: 0, weatherCode: 0, isDayTime: true }))).map((city, index) => (
+                <motion.div
+                  key={city.slug}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 + index * 0.05 }}
+                >
+                  <Link
+                    href={`/stad/${city.slug}`}
+                    className="group p-5 sm:p-6 glass-card rounded-2xl text-left overflow-hidden relative block hover:scale-[1.02] transition-all duration-300"
+                  >
+                    {/* Hover gradient */}
+                    <div className={`absolute inset-0 transition-all duration-500 ${isDark ? 'bg-gradient-to-br from-cyan-500/0 to-emerald-500/0 group-hover:from-cyan-500/10 group-hover:to-emerald-500/10' : 'bg-gradient-to-br from-sky-400/0 to-sky-300/0 group-hover:from-sky-400/10 group-hover:to-sky-300/10'}`} />
+
+                    <div className="relative z-10 flex items-start justify-between">
+                      <div>
+                        <h3 className={`text-lg sm:text-xl font-black transition-colors duration-300 ${isDark ? 'text-white group-hover:text-cyan-400' : 'text-sky-950 group-hover:text-sky-700'}`}>
+                          {city.name}
+                        </h3>
+                        {!loadingWeather && (
+                          <div className={`flex flex-col gap-1 mt-2`}>
+                            <div className={`flex items-center gap-1.5 text-sm ${isDark ? 'text-white/60' : 'text-sky-700/80'}`}>
+                              {/* Thermometer icon */}
+                              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M15 13V5c0-1.66-1.34-3-3-3S9 3.34 9 5v8c-1.21.91-2 2.37-2 4 0 2.76 2.24 5 5 5s5-2.24 5-5c0-1.63-.79-3.09-2-4zm-4-8c0-.55.45-1 1-1s1 .45 1 1h-1v1h1v2h-1v1h1v2h-2V5z" />
+                              </svg>
+                              <span className="font-semibold">{city.temperature}°C</span>
+                            </div>
+                            <div className={`flex items-center gap-1.5 text-sm ${isDark ? 'text-white/60' : 'text-sky-700/80'}`}>
+                              {/* Water drop icon */}
+                              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8zm0 18c-3.35 0-6-2.57-6-6.2 0-2.34 1.95-5.44 6-9.14 4.05 3.7 6 6.79 6 9.14 0 3.63-2.65 6.2-6 6.2z" />
+                              </svg>
+                              <span className="font-semibold">{city.humidity}%</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Drying score badge */}
+                      <div className={`flex flex-col items-center ${loadingWeather ? 'opacity-50' : ''}`}>
+                        <div className={`text-xl sm:text-2xl font-black ${city.dryingScore >= 70 ? (isDark ? 'text-emerald-400' : 'text-emerald-500') :
+                          city.dryingScore >= 40 ? (isDark ? 'text-yellow-400' : 'text-amber-500') :
+                            (isDark ? 'text-red-400' : 'text-red-500')
+                          }`}>
+                          {loadingWeather ? "--" : city.dryingScore}
+                        </div>
+                        <div className={`text-[9px] font-bold uppercase tracking-wider ${isDark ? 'text-white/30' : 'text-sky-600/50'}`}>
+                          score
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Weather icon */}
+                    <div className="absolute bottom-4 right-4 opacity-30 group-hover:opacity-60 transition-opacity duration-300">
+                      {!loadingWeather && <WeatherIcon type={getWeatherIcon(city.weatherCode, city.isDayTime)} />}
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </motion.section>
+
         </div>
       </main>
 
       {/* Footer */}
-      <footer className={`relative z-10 border-t mt-20 ${isDark ? 'border-white/5' : 'border-sky-200/50'}`}>
-        <div className="container mx-auto max-w-7xl px-6 py-20">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
+      <footer className={`relative z-10 border-t mt-16 ${isDark ? 'border-white/5' : 'border-sky-200/50'}`}>
+        <div className="container mx-auto max-w-7xl px-6 py-16">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
             {/* Brand */}
-            <div className="md:col-span-4 space-y-6">
+            <div className="md:col-span-4 space-y-4">
               <h3 className="text-xl font-black tracking-tighter">
                 <span className={isDark ? 'text-white' : 'text-sky-950'}>DroogWeerVandaag</span>
                 <span className="animate-text-shimmer">.nl</span>
               </h3>
               <p className={`text-xs font-medium uppercase tracking-widest leading-relaxed ${isDark ? 'text-white/40' : 'text-sky-800/60'}`}>
-                Vooruitgang in waswetenschappen door precisie atmosferische fysica. Beter voor je kleren, beter voor de planeet.
+                Slimme wasdroogvoorspeller voor het moderne huishouden.
               </p>
-
-              {/* Animated dots */}
               <div className="flex gap-3">
                 <div className={`w-2 h-2 rounded-full animate-pulse-glow ${isDark ? 'bg-cyan-500' : 'bg-sky-500'}`} />
                 <div className={`w-2 h-2 rounded-full animate-pulse-glow delay-200 ${isDark ? 'bg-emerald-500' : 'bg-amber-400'}`} />
@@ -736,37 +656,37 @@ export default function Home() {
             </div>
 
             {/* App Tools */}
-            <div className="md:col-span-3 space-y-6">
-              <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${isDark ? 'text-cyan-400' : 'text-sky-600'}`}>App Tools</span>
-              <nav className="space-y-4">
+            <div className="md:col-span-3 space-y-4">
+              <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${isDark ? 'text-cyan-400' : 'text-sky-600'}`}>Tools</span>
+              <nav className="space-y-3">
                 <Link href="/" className={`block text-sm font-bold uppercase tracking-wider transition-colors duration-300 hover:translate-x-2 ${isDark ? 'text-white/50 hover:text-cyan-400' : 'text-sky-700/70 hover:text-sky-600'}`}>
-                  Weervoorspellingen
+                  Droogvoorspelling
                 </Link>
                 <Link href="/calculator" className={`block text-sm font-bold uppercase tracking-wider transition-colors duration-300 hover:translate-x-2 ${isDark ? 'text-white/50 hover:text-cyan-400' : 'text-sky-700/70 hover:text-sky-600'}`}>
                   Droogtijd Calculator
                 </Link>
                 <Link href="/stoffen" className={`block text-sm font-bold uppercase tracking-wider transition-colors duration-300 hover:translate-x-2 ${isDark ? 'text-white/50 hover:text-cyan-400' : 'text-sky-700/70 hover:text-sky-600'}`}>
-                  Stoffen Bibliotheek
+                  Stoffen Gids
                 </Link>
               </nav>
             </div>
 
             {/* Support */}
-            <div className="md:col-span-3 space-y-6">
-              <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${isDark ? 'text-cyan-400' : 'text-sky-600'}`}>Ondersteuning</span>
-              <nav className="space-y-4">
+            <div className="md:col-span-3 space-y-4">
+              <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${isDark ? 'text-cyan-400' : 'text-sky-600'}`}>Info</span>
+              <nav className="space-y-3">
                 <Link href="/over-ons" className={`block text-sm font-bold uppercase tracking-wider transition-colors duration-300 hover:translate-x-2 ${isDark ? 'text-white/50 hover:text-cyan-400' : 'text-sky-700/70 hover:text-sky-600'}`}>
-                  Over het Project
+                  Over Ons
                 </Link>
               </nav>
             </div>
 
             {/* Visual Element */}
             <div className="md:col-span-2 flex justify-end">
-              <div className="relative w-24 h-24">
+              <div className="relative w-20 h-20">
                 <div className={`absolute inset-0 rounded-full blur-2xl opacity-30 animate-pulse-glow ${isDark ? 'bg-gradient-to-r from-cyan-500 to-emerald-500' : 'bg-gradient-to-r from-sky-400 to-sky-300'}`} />
                 <div className={`absolute inset-4 rounded-full opacity-20 animate-float ${isDark ? 'bg-gradient-to-r from-cyan-500 to-emerald-500' : 'bg-gradient-to-r from-sky-400 to-sky-300'}`} />
-                <div className={`absolute inset-8 rounded-full flex items-center justify-center ${isDark ? 'bg-white/10' : 'bg-white/50'}`}>
+                <div className={`absolute inset-6 rounded-full flex items-center justify-center ${isDark ? 'bg-white/10' : 'bg-white/50'}`}>
                   <svg className={`w-4 h-4 ${isDark ? 'text-white/50' : 'text-sky-600'}`} fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
                   </svg>
@@ -776,14 +696,11 @@ export default function Home() {
           </div>
 
           {/* Bottom bar */}
-          <div className={`flex flex-col sm:flex-row items-center justify-between gap-6 pt-12 border-t ${isDark ? 'border-white/5' : 'border-sky-200/50'}`}>
-            <p className={`text-[10px] font-bold uppercase tracking-[0.3em] ${isDark ? 'text-white/30' : 'text-sky-700/50'}`}>
-              © 2026 DroogWeerVandaag.nl - Alle Rechten Voorbehouden
+          <div className={`flex flex-col sm:flex-row items-center justify-between gap-4 pt-10 border-t ${isDark ? 'border-white/5' : 'border-sky-200/50'}`}>
+            <p className={`text-[10px] font-bold uppercase tracking-[0.2em] ${isDark ? 'text-white/30' : 'text-sky-700/50'}`}>
+              © 2026 DroogWeerVandaag.nl
             </p>
-            <div className="flex gap-8">
-              <a href="#" className={`text-xs font-bold uppercase tracking-wider transition-colors duration-300 ${isDark ? 'text-white/30 hover:text-cyan-400' : 'text-sky-700/50 hover:text-sky-600'}`}>
-                LinkedIn
-              </a>
+            <div className="flex gap-6">
               <a href="#" className={`text-xs font-bold uppercase tracking-wider transition-colors duration-300 ${isDark ? 'text-white/30 hover:text-cyan-400' : 'text-sky-700/50 hover:text-sky-600'}`}>
                 Contact
               </a>
@@ -801,22 +718,22 @@ export default function Home() {
             exit={{ opacity: 0, y: 50 }}
             className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[95%] max-w-lg z-[200]"
           >
-            <div className="glass-card rounded-3xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="glass-card rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
               <span className={`text-sm font-medium text-center sm:text-left ${isDark ? 'text-white/80' : 'text-sky-800'}`}>
-                We gebruiken anonieme analytics om de app te verbeteren. Akkoord?
+                We gebruiken cookies om de app te verbeteren.
               </span>
-              <div className="flex gap-3 shrink-0">
+              <div className="flex gap-2 shrink-0">
                 <button
                   onClick={() => setShowCookieBanner(false)}
-                  className={`px-5 py-2.5 rounded-full text-xs font-bold transition-colors duration-300 ${isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-sky-100 hover:bg-sky-200 text-sky-800'}`}
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-colors duration-300 ${isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-sky-100 hover:bg-sky-200 text-sky-800'}`}
                 >
-                  Nee, bedankt
+                  Nee
                 </button>
                 <button
                   onClick={() => setShowCookieBanner(false)}
-                  className={`px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-wider hover:scale-105 active:scale-95 transition-all duration-300 ${isDark ? 'bg-gradient-to-r from-cyan-500 to-emerald-500 text-black' : 'bg-gradient-to-r from-sky-500 to-sky-400 text-white'}`}
+                  className={`px-5 py-2 rounded-full text-xs font-black uppercase tracking-wider hover:scale-105 active:scale-95 transition-all duration-300 ${isDark ? 'bg-gradient-to-r from-cyan-500 to-emerald-500 text-black' : 'bg-gradient-to-r from-sky-500 to-sky-400 text-white'}`}
                 >
-                  Accepteren
+                  OK
                 </button>
               </div>
             </div>

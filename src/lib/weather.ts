@@ -8,7 +8,7 @@ export const dutchCities = [
   { name: "Groningen", slug: "groningen", lat: 53.2194, lon: 6.5665 },
 ];
 
-// Complete list of Dutch municipalities and places (150+)
+// Complete list of Dutch municipalities (342 gemeenten)
 export const allDutchPlaces = [
   // Featured cities
   { name: "Amsterdam", slug: "amsterdam", lat: 52.3676, lon: 4.9041, province: "Noord-Holland" },
@@ -222,6 +222,217 @@ export const allDutchPlaces = [
   { name: "Wijk bij Duurstede", slug: "wijk-bij-duurstede", lat: 51.9750, lon: 5.3333, province: "Utrecht" },
   { name: "Breukelen", slug: "breukelen", lat: 52.1750, lon: 5.0000, province: "Utrecht" },
   { name: "Vianen", slug: "vianen", lat: 51.9917, lon: 5.0917, province: "Utrecht" },
+
+  // Aanvullende gemeenten - Noord-Holland
+  { name: "Blaricum", slug: "blaricum", lat: 52.2736, lon: 5.2450, province: "Noord-Holland" },
+  { name: "Bloemendaal", slug: "bloemendaal", lat: 52.4019, lon: 4.6208, province: "Noord-Holland" },
+  { name: "Gooise Meren", slug: "gooise-meren", lat: 52.2900, lon: 5.1600, province: "Noord-Holland" },
+  { name: "Heiloo", slug: "heiloo", lat: 52.6003, lon: 4.7069, province: "Noord-Holland" },
+  { name: "Huizen", slug: "huizen", lat: 52.2967, lon: 5.2394, province: "Noord-Holland" },
+  { name: "Koggenland", slug: "koggenland", lat: 52.6667, lon: 5.0000, province: "Noord-Holland" },
+  { name: "Landsmeer", slug: "landsmeer", lat: 52.4292, lon: 4.9139, province: "Noord-Holland" },
+  { name: "Langedijk", slug: "langedijk", lat: 52.6833, lon: 4.7833, province: "Noord-Holland" },
+  { name: "Laren", slug: "laren", lat: 52.2558, lon: 5.2281, province: "Noord-Holland" },
+  { name: "Oostzaan", slug: "oostzaan", lat: 52.4383, lon: 4.8708, province: "Noord-Holland" },
+  { name: "Opmeer", slug: "opmeer", lat: 52.7167, lon: 4.9500, province: "Noord-Holland" },
+  { name: "Ouder-Amstel", slug: "ouder-amstel", lat: 52.2958, lon: 4.9125, province: "Noord-Holland" },
+  { name: "Stede Broec", slug: "stede-broec", lat: 52.6917, lon: 5.2167, province: "Noord-Holland" },
+  { name: "Waterland", slug: "waterland", lat: 52.4500, lon: 5.0167, province: "Noord-Holland" },
+  { name: "Wormerland", slug: "wormerland", lat: 52.4917, lon: 4.8250, province: "Noord-Holland" },
+  { name: "Zandvoort", slug: "zandvoort", lat: 52.3714, lon: 4.5331, province: "Noord-Holland" },
+  { name: "Dijk en Waard", slug: "dijk-en-waard", lat: 52.6667, lon: 4.8333, province: "Noord-Holland" },
+
+  // Aanvullende gemeenten - Zuid-Holland
+  { name: "Albrandswaard", slug: "albrandswaard", lat: 51.8583, lon: 4.4083, province: "Zuid-Holland" },
+  { name: "Alblasserdam", slug: "alblasserdam", lat: 51.8656, lon: 4.6611, province: "Zuid-Holland" },
+  { name: "Barendrecht", slug: "barendrecht", lat: 51.8567, lon: 4.5342, province: "Zuid-Holland" },
+  { name: "Bodegraven-Reeuwijk", slug: "bodegraven-reeuwijk", lat: 52.0833, lon: 4.7500, province: "Zuid-Holland" },
+  { name: "Brielle", slug: "brielle", lat: 51.9014, lon: 4.1631, province: "Zuid-Holland" },
+  { name: "Goeree-Overflakkee", slug: "goeree-overflakkee", lat: 51.7500, lon: 4.0833, province: "Zuid-Holland" },
+  { name: "Hardinxveld-Giessendam", slug: "hardinxveld-giessendam", lat: 51.8250, lon: 4.8417, province: "Zuid-Holland" },
+  { name: "Hendrik-Ido-Ambacht", slug: "hendrik-ido-ambacht", lat: 51.8442, lon: 4.6375, province: "Zuid-Holland" },
+  { name: "Hillegom", slug: "hillegom", lat: 52.2917, lon: 4.5833, province: "Zuid-Holland" },
+  { name: "Hoeksche Waard", slug: "hoeksche-waard", lat: 51.7833, lon: 4.4167, province: "Zuid-Holland" },
+  { name: "Krimpen aan den IJssel", slug: "krimpen-aan-den-ijssel", lat: 51.9172, lon: 4.6003, province: "Zuid-Holland" },
+  { name: "Krimpenerwaard", slug: "krimpenerwaard", lat: 51.9500, lon: 4.7500, province: "Zuid-Holland" },
+  { name: "Lansingerland", slug: "lansingerland", lat: 52.0000, lon: 4.5333, province: "Zuid-Holland" },
+  { name: "Maassluis", slug: "maassluis", lat: 51.9236, lon: 4.2503, province: "Zuid-Holland" },
+  { name: "Midden-Delfland", slug: "midden-delfland", lat: 51.9667, lon: 4.2833, province: "Zuid-Holland" },
+  { name: "Molenlanden", slug: "molenlanden", lat: 51.8833, lon: 4.8833, province: "Zuid-Holland" },
+  { name: "Nissewaard", slug: "nissewaard", lat: 51.8500, lon: 4.3333, province: "Zuid-Holland" },
+  { name: "Nieuwkoop", slug: "nieuwkoop", lat: 52.1500, lon: 4.7833, province: "Zuid-Holland" },
+  { name: "Oudewater", slug: "oudewater", lat: 52.0250, lon: 4.8667, province: "Zuid-Holland" },
+  { name: "Teylingen", slug: "teylingen", lat: 52.2167, lon: 4.5000, province: "Zuid-Holland" },
+  { name: "Voorne aan Zee", slug: "voorne-aan-zee", lat: 51.8667, lon: 4.1333, province: "Zuid-Holland" },
+  { name: "Zwijndrecht", slug: "zwijndrecht", lat: 51.8206, lon: 4.6331, province: "Zuid-Holland" },
+  { name: "Zuid-Holland Zuid", slug: "zuid-holland-zuid", lat: 51.8000, lon: 4.7500, province: "Zuid-Holland" },
+
+  // Aanvullende gemeenten - Noord-Brabant
+  { name: "Alphen-Chaam", slug: "alphen-chaam", lat: 51.4917, lon: 4.9417, province: "Noord-Brabant" },
+  { name: "Altena", slug: "altena", lat: 51.7667, lon: 4.9667, province: "Noord-Brabant" },
+  { name: "Asten", slug: "asten", lat: 51.4039, lon: 5.7472, province: "Noord-Brabant" },
+  { name: "Baarle-Nassau", slug: "baarle-nassau", lat: 51.4467, lon: 4.9308, province: "Noord-Brabant" },
+  { name: "Bergeijk", slug: "bergeijk", lat: 51.3194, lon: 5.3597, province: "Noord-Brabant" },
+  { name: "Bernheze", slug: "bernheze", lat: 51.7000, lon: 5.5167, province: "Noord-Brabant" },
+  { name: "Bladel", slug: "bladel", lat: 51.3667, lon: 5.2167, province: "Noord-Brabant" },
+  { name: "Boekel", slug: "boekel", lat: 51.6000, lon: 5.6833, province: "Noord-Brabant" },
+  { name: "Boxmeer", slug: "boxmeer", lat: 51.6458, lon: 5.9461, province: "Noord-Brabant" },
+  { name: "Cranendonck", slug: "cranendonck", lat: 51.3000, lon: 5.5500, province: "Noord-Brabant" },
+  { name: "Deurne", slug: "deurne", lat: 51.4617, lon: 5.7900, province: "Noord-Brabant" },
+  { name: "Drimmelen", slug: "drimmelen", lat: 51.7000, lon: 4.8000, province: "Noord-Brabant" },
+  { name: "Eersel", slug: "eersel", lat: 51.3564, lon: 5.3186, province: "Noord-Brabant" },
+  { name: "Geertruidenberg", slug: "geertruidenberg", lat: 51.7017, lon: 4.8567, province: "Noord-Brabant" },
+  { name: "Gilze en Rijen", slug: "gilze-en-rijen", lat: 51.5417, lon: 4.9417, province: "Noord-Brabant" },
+  { name: "Goirle", slug: "goirle", lat: 51.5208, lon: 5.0653, province: "Noord-Brabant" },
+  { name: "Grave", slug: "grave", lat: 51.7583, lon: 5.7375, province: "Noord-Brabant" },
+  { name: "Haaren", slug: "haaren", lat: 51.6017, lon: 5.2250, province: "Noord-Brabant" },
+  { name: "Halderberge", slug: "halderberge", lat: 51.5833, lon: 4.5667, province: "Noord-Brabant" },
+  { name: "Heeze-Leende", slug: "heeze-leende", lat: 51.3833, lon: 5.5667, province: "Noord-Brabant" },
+  { name: "Heusden", slug: "heusden", lat: 51.7333, lon: 5.1333, province: "Noord-Brabant" },
+  { name: "Hilvarenbeek", slug: "hilvarenbeek", lat: 51.4847, lon: 5.1375, province: "Noord-Brabant" },
+  { name: "Laarbeek", slug: "laarbeek", lat: 51.5167, lon: 5.6167, province: "Noord-Brabant" },
+  { name: "Land van Cuijk", slug: "land-van-cuijk", lat: 51.7167, lon: 5.8833, province: "Noord-Brabant" },
+  { name: "Loon op Zand", slug: "loon-op-zand", lat: 51.6333, lon: 5.0833, province: "Noord-Brabant" },
+  { name: "Maashorst", slug: "maashorst", lat: 51.6500, lon: 5.5833, province: "Noord-Brabant" },
+  { name: "Meierijstad", slug: "meierijstad", lat: 51.6333, lon: 5.5500, province: "Noord-Brabant" },
+  { name: "Mill en Sint Hubert", slug: "mill-en-sint-hubert", lat: 51.6917, lon: 5.7750, province: "Noord-Brabant" },
+  { name: "Moerdijk", slug: "moerdijk", lat: 51.6500, lon: 4.6167, province: "Noord-Brabant" },
+  { name: "Oirschot", slug: "oirschot", lat: 51.5042, lon: 5.3083, province: "Noord-Brabant" },
+  { name: "Oisterwijk", slug: "oisterwijk", lat: 51.5817, lon: 5.1917, province: "Noord-Brabant" },
+  { name: "Reusel-De Mierden", slug: "reusel-de-mierden", lat: 51.3667, lon: 5.1500, province: "Noord-Brabant" },
+  { name: "Rucphen", slug: "rucphen", lat: 51.5250, lon: 4.5583, province: "Noord-Brabant" },
+  { name: "Sint Anthonis", slug: "sint-anthonis", lat: 51.6333, lon: 5.8833, province: "Noord-Brabant" },
+  { name: "Sint-Michielsgestel", slug: "sint-michielsgestel", lat: 51.6417, lon: 5.3500, province: "Noord-Brabant" },
+  { name: "Someren", slug: "someren", lat: 51.3833, lon: 5.7167, province: "Noord-Brabant" },
+  { name: "Son en Breugel", slug: "son-en-breugel", lat: 51.5167, lon: 5.4833, province: "Noord-Brabant" },
+  { name: "Steenbergen", slug: "steenbergen", lat: 51.5833, lon: 4.3167, province: "Noord-Brabant" },
+  { name: "Vught", slug: "vught", lat: 51.6583, lon: 5.2917, province: "Noord-Brabant" },
+  { name: "Woensdrecht", slug: "woensdrecht", lat: 51.4333, lon: 4.3000, province: "Noord-Brabant" },
+  { name: "Zundert", slug: "zundert", lat: 51.4708, lon: 4.6583, province: "Noord-Brabant" },
+
+  // Aanvullende gemeenten - Gelderland
+  { name: "Aalten", slug: "aalten", lat: 51.9250, lon: 6.5833, province: "Gelderland" },
+  { name: "Berg en Dal", slug: "berg-en-dal", lat: 51.8167, lon: 5.9333, province: "Gelderland" },
+  { name: "Beuningen", slug: "beuningen", lat: 51.8583, lon: 5.7667, province: "Gelderland" },
+  { name: "Bronckhorst", slug: "bronckhorst", lat: 52.0667, lon: 6.3500, province: "Gelderland" },
+  { name: "Brummen", slug: "brummen", lat: 52.0889, lon: 6.1556, province: "Gelderland" },
+  { name: "Buren", slug: "buren", lat: 51.9167, lon: 5.3333, province: "Gelderland" },
+  { name: "Druten", slug: "druten", lat: 51.8833, lon: 5.6000, province: "Gelderland" },
+  { name: "Duiven", slug: "duiven", lat: 51.9500, lon: 6.0167, province: "Gelderland" },
+  { name: "Epe", slug: "epe", lat: 52.3500, lon: 5.9833, province: "Gelderland" },
+  { name: "Hattem", slug: "hattem", lat: 52.4750, lon: 6.0667, province: "Gelderland" },
+  { name: "Heerde", slug: "heerde", lat: 52.3917, lon: 6.0417, province: "Gelderland" },
+  { name: "Heumen", slug: "heumen", lat: 51.7833, lon: 5.8500, province: "Gelderland" },
+  { name: "Lingewaard", slug: "lingewaard", lat: 51.9167, lon: 5.9333, province: "Gelderland" },
+  { name: "Maasdriel", slug: "maasdriel", lat: 51.8000, lon: 5.2833, province: "Gelderland" },
+  { name: "Montferland", slug: "montferland", lat: 51.9167, lon: 6.2000, province: "Gelderland" },
+  { name: "Neder-Betuwe", slug: "neder-betuwe", lat: 51.9167, lon: 5.5667, province: "Gelderland" },
+  { name: "Nijkerk", slug: "nijkerk", lat: 52.2167, lon: 5.4833, province: "Gelderland" },
+  { name: "Oldebroek", slug: "oldebroek", lat: 52.4500, lon: 5.9167, province: "Gelderland" },
+  { name: "Oost Gelre", slug: "oost-gelre", lat: 52.0000, lon: 6.6167, province: "Gelderland" },
+  { name: "Overbetuwe", slug: "overbetuwe", lat: 51.9333, lon: 5.8000, province: "Gelderland" },
+  { name: "Renkum", slug: "renkum", lat: 51.9833, lon: 5.7500, province: "Gelderland" },
+  { name: "Rozendaal", slug: "rozendaal", lat: 52.0167, lon: 5.9500, province: "Gelderland" },
+  { name: "Scherpenzeel", slug: "scherpenzeel", lat: 52.0833, lon: 5.4833, province: "Gelderland" },
+  { name: "Voorst", slug: "voorst", lat: 52.1833, lon: 6.1333, province: "Gelderland" },
+  { name: "Westervoort", slug: "westervoort", lat: 51.9583, lon: 5.9667, province: "Gelderland" },
+  { name: "West Betuwe", slug: "west-betuwe", lat: 51.8833, lon: 5.1500, province: "Gelderland" },
+  { name: "West Maas en Waal", slug: "west-maas-en-waal", lat: 51.8667, lon: 5.4833, province: "Gelderland" },
+  { name: "Wijchen", slug: "wijchen", lat: 51.8083, lon: 5.7250, province: "Gelderland" },
+  { name: "Zaltbommel", slug: "zaltbommel", lat: 51.8083, lon: 5.2417, province: "Gelderland" },
+
+  // Aanvullende gemeenten - Overijssel
+  { name: "Dinkelland", slug: "dinkelland", lat: 52.3833, lon: 7.0333, province: "Overijssel" },
+  { name: "Haaksbergen", slug: "haaksbergen", lat: 52.1583, lon: 6.7417, province: "Overijssel" },
+  { name: "Hof van Twente", slug: "hof-van-twente", lat: 52.2667, lon: 6.5833, province: "Overijssel" },
+  { name: "Losser", slug: "losser", lat: 52.2667, lon: 7.0000, province: "Overijssel" },
+  { name: "Olst-Wijhe", slug: "olst-wijhe", lat: 52.3333, lon: 6.1167, province: "Overijssel" },
+  { name: "Twenterand", slug: "twenterand", lat: 52.4333, lon: 6.6000, province: "Overijssel" },
+  { name: "Tubbergen", slug: "tubbergen", lat: 52.4167, lon: 6.8000, province: "Overijssel" },
+  { name: "Zwartewaterland", slug: "zwartewaterland", lat: 52.5833, lon: 6.0667, province: "Overijssel" },
+  { name: "Borne", slug: "borne", lat: 52.3000, lon: 6.7500, province: "Overijssel" },
+
+  // Aanvullende gemeenten - Limburg
+  { name: "Beesel", slug: "beesel", lat: 51.2667, lon: 6.0333, province: "Limburg" },
+  { name: "Bergen (L)", slug: "bergen-limburg", lat: 51.6000, lon: 6.0333, province: "Limburg" },
+  { name: "Beekdaelen", slug: "beekdaelen", lat: 50.9333, lon: 5.9167, province: "Limburg" },
+  { name: "Eijsden-Margraten", slug: "eijsden-margraten", lat: 50.7833, lon: 5.7500, province: "Limburg" },
+  { name: "Gennep", slug: "gennep", lat: 51.6983, lon: 5.9725, province: "Limburg" },
+  { name: "Horst aan de Maas", slug: "horst-aan-de-maas", lat: 51.4500, lon: 6.0500, province: "Limburg" },
+  { name: "Leudal", slug: "leudal", lat: 51.2500, lon: 5.9000, province: "Limburg" },
+  { name: "Maasgouw", slug: "maasgouw", lat: 51.1667, lon: 5.8833, province: "Limburg" },
+  { name: "Maastricht", slug: "maastricht", lat: 50.8514, lon: 5.6910, province: "Limburg" },
+  { name: "Meerssen", slug: "meerssen", lat: 50.8833, lon: 5.7500, province: "Limburg" },
+  { name: "Mook en Middelaar", slug: "mook-en-middelaar", lat: 51.7583, lon: 5.8833, province: "Limburg" },
+  { name: "Nederweert", slug: "nederweert", lat: 51.2833, lon: 5.7500, province: "Limburg" },
+  { name: "Peel en Maas", slug: "peel-en-maas", lat: 51.3500, lon: 6.0000, province: "Limburg" },
+  { name: "Simpelveld", slug: "simpelveld", lat: 50.8333, lon: 5.9833, province: "Limburg" },
+  { name: "Stein", slug: "stein", lat: 50.9667, lon: 5.7667, province: "Limburg" },
+  { name: "Valkenburg aan de Geul", slug: "valkenburg-aan-de-geul", lat: 50.8653, lon: 5.8317, province: "Limburg" },
+  { name: "Voerendaal", slug: "voerendaal", lat: 50.8833, lon: 5.9333, province: "Limburg" },
+
+  // Aanvullende gemeenten - Friesland
+  { name: "Achtkarspelen", slug: "achtkarspelen", lat: 53.2333, lon: 6.1500, province: "Friesland" },
+  { name: "Ameland", slug: "ameland", lat: 53.4500, lon: 5.7333, province: "Friesland" },
+  { name: "Dantumadiel", slug: "dantumadiel", lat: 53.3000, lon: 6.0833, province: "Friesland" },
+  { name: "De Fryske Marren", slug: "de-fryske-marren", lat: 52.9333, lon: 5.7500, province: "Friesland" },
+  { name: "Harlingen", slug: "harlingen-gem", lat: 53.1742, lon: 5.4142, province: "Friesland" },
+  { name: "Heerenveen", slug: "heerenveen-gem", lat: 52.9597, lon: 5.9247, province: "Friesland" },
+  { name: "Noardeast-Fryslân", slug: "noardeast-fryslan", lat: 53.3500, lon: 6.0000, province: "Friesland" },
+  { name: "Ooststellingwerf", slug: "ooststellingwerf", lat: 52.9667, lon: 6.2833, province: "Friesland" },
+  { name: "Opsterland", slug: "opsterland", lat: 53.0833, lon: 6.1667, province: "Friesland" },
+  { name: "Schiermonnikoog", slug: "schiermonnikoog", lat: 53.4833, lon: 6.1667, province: "Friesland" },
+  { name: "Smallingerland", slug: "smallingerland", lat: 53.1000, lon: 6.0667, province: "Friesland" },
+  { name: "Súdwest-Fryslân", slug: "sudwest-fryslan", lat: 53.0167, lon: 5.6500, province: "Friesland" },
+  { name: "Terschelling", slug: "terschelling", lat: 53.4000, lon: 5.3500, province: "Friesland" },
+  { name: "Tytsjerksteradiel", slug: "tytsjerksteradiel", lat: 53.1833, lon: 5.9500, province: "Friesland" },
+  { name: "Vlieland", slug: "vlieland", lat: 53.2500, lon: 5.0667, province: "Friesland" },
+  { name: "Waadhoeke", slug: "waadhoeke", lat: 53.2000, lon: 5.5500, province: "Friesland" },
+  { name: "Weststellingwerf", slug: "weststellingwerf", lat: 52.8833, lon: 6.0667, province: "Friesland" },
+
+  // Aanvullende gemeenten - Drenthe
+  { name: "Aa en Hunze", slug: "aa-en-hunze", lat: 52.9667, lon: 6.7833, province: "Drenthe" },
+  { name: "De Wolden", slug: "de-wolden", lat: 52.7167, lon: 6.3667, province: "Drenthe" },
+  { name: "Midden-Drenthe", slug: "midden-drenthe", lat: 52.8667, lon: 6.5833, province: "Drenthe" },
+  { name: "Noordenveld", slug: "noordenveld", lat: 53.1167, lon: 6.4667, province: "Drenthe" },
+  { name: "Tynaarlo", slug: "tynaarlo", lat: 53.0667, lon: 6.5833, province: "Drenthe" },
+  { name: "Westerveld", slug: "westerveld", lat: 52.8500, lon: 6.2333, province: "Drenthe" },
+  { name: "Borger-Odoorn", slug: "borger-odoorn", lat: 52.9083, lon: 6.8583, province: "Drenthe" },
+
+  // Aanvullende gemeenten - Groningen
+  { name: "Het Hogeland", slug: "het-hogeland", lat: 53.3833, lon: 6.5000, province: "Groningen" },
+  { name: "Midden-Groningen", slug: "midden-groningen", lat: 53.1167, lon: 6.8167, province: "Groningen" },
+  { name: "Oldambt", slug: "oldambt", lat: 53.1667, lon: 7.0333, province: "Groningen" },
+  { name: "Pekela", slug: "pekela", lat: 53.0667, lon: 6.9500, province: "Groningen" },
+  { name: "Westerkwartier", slug: "westerkwartier", lat: 53.2000, lon: 6.3333, province: "Groningen" },
+  { name: "Westerwolde", slug: "westerwolde", lat: 53.0167, lon: 7.0833, province: "Groningen" },
+  { name: "Eemsdelta", slug: "eemsdelta", lat: 53.3333, lon: 6.9167, province: "Groningen" },
+
+  // Aanvullende gemeenten - Zeeland
+  { name: "Borsele", slug: "borsele", lat: 51.4333, lon: 3.7500, province: "Zeeland" },
+  { name: "Kapelle", slug: "kapelle", lat: 51.4833, lon: 3.9667, province: "Zeeland" },
+  { name: "Noord-Beveland", slug: "noord-beveland", lat: 51.5667, lon: 3.7667, province: "Zeeland" },
+  { name: "Reimerswaal", slug: "reimerswaal", lat: 51.4333, lon: 4.0333, province: "Zeeland" },
+  { name: "Schouwen-Duiveland", slug: "schouwen-duiveland", lat: 51.7000, lon: 3.8500, province: "Zeeland" },
+  { name: "Sluis", slug: "sluis", lat: 51.3083, lon: 3.3833, province: "Zeeland" },
+  { name: "Tholen", slug: "tholen", lat: 51.5333, lon: 4.1500, province: "Zeeland" },
+  { name: "Veere", slug: "veere", lat: 51.5500, lon: 3.6667, province: "Zeeland" },
+
+  // Aanvullende gemeenten - Flevoland
+  { name: "Noordoostpolder", slug: "noordoostpolder", lat: 52.7167, lon: 5.7500, province: "Flevoland" },
+
+  // Aanvullende gemeenten - Utrecht
+  { name: "Bunnik", slug: "bunnik", lat: 52.0667, lon: 5.2000, province: "Utrecht" },
+  { name: "Leusden", slug: "leusden", lat: 52.1333, lon: 5.4333, province: "Utrecht" },
+  { name: "Lopik", slug: "lopik", lat: 51.9833, lon: 4.9500, province: "Utrecht" },
+  { name: "Montfoort", slug: "montfoort", lat: 52.0500, lon: 4.9500, province: "Utrecht" },
+  { name: "Oudewater", slug: "oudewater-ut", lat: 52.0250, lon: 4.8667, province: "Utrecht" },
+  { name: "Renswoude", slug: "renswoude", lat: 52.0833, lon: 5.5333, province: "Utrecht" },
+  { name: "Rhenen", slug: "rhenen", lat: 51.9583, lon: 5.5667, province: "Utrecht" },
+  { name: "Stichtse Vecht", slug: "stichtse-vecht", lat: 52.1667, lon: 5.0333, province: "Utrecht" },
+  { name: "Utrechtse Heuvelrug", slug: "utrechtse-heuvelrug", lat: 52.0333, lon: 5.3833, province: "Utrecht" },
+  { name: "Vijfheerenlanden", slug: "vijfheerenlanden", lat: 51.9667, lon: 5.0500, province: "Utrecht" },
+  { name: "Woudenberg", slug: "woudenberg", lat: 52.0833, lon: 5.4167, province: "Utrecht" },
 ];
 
 export interface HourlyForecast {
@@ -386,7 +597,7 @@ export async function fetchWeatherData(citySlug: string): Promise<WeatherData | 
 
   try {
     const response = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m,weather_code,is_day,uv_index&hourly=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m,uv_index,is_day&timezone=Europe/Amsterdam&forecast_days=1`
+      `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m,weather_code,is_day,uv_index&hourly=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m,uv_index,is_day&timezone=Europe/Amsterdam&forecast_days=2`
     );
 
     if (!response.ok) throw new Error("Weather API error");
@@ -447,49 +658,70 @@ export async function fetchWeatherData(citySlug: string): Promise<WeatherData | 
   }
 }
 
+// Fetch weather for a single city by slug
+export async function fetchCityWeather(slug: string): Promise<{
+  slug: string;
+  name: string;
+  temperature: number;
+  humidity: number;
+  dryingScore: number;
+  weatherCode: number;
+  isDayTime: boolean;
+} | null> {
+  const city = allDutchPlaces.find((p) => p.slug === slug);
+  if (!city) return null;
+
+  try {
+    const response = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m,weather_code,is_day,uv_index&timezone=Europe/Amsterdam`
+    );
+
+    if (!response.ok) throw new Error("API error");
+
+    const data = await response.json();
+    const dryingScore = calculateDryingScore(
+      data.current.temperature_2m,
+      data.current.relative_humidity_2m,
+      data.current.wind_speed_10m,
+      data.current.precipitation,
+      data.current.cloud_cover,
+      data.current.uv_index || 0
+    );
+
+    return {
+      slug: city.slug,
+      name: city.name,
+      temperature: Math.round(data.current.temperature_2m),
+      humidity: data.current.relative_humidity_2m,
+      dryingScore,
+      weatherCode: data.current.weather_code,
+      isDayTime: data.current.is_day === 1,
+    };
+  } catch (error) {
+    console.error(`Error fetching weather for ${slug}:`, error);
+    return null;
+  }
+}
+
 // Fetch simple weather for all cities (for home page)
 export async function fetchAllCitiesWeather(): Promise<
   Array<{ slug: string; name: string; temperature: number; humidity: number; dryingScore: number; weatherCode: number; isDayTime: boolean }>
 > {
   const results = await Promise.all(
     dutchCities.map(async (city) => {
-      try {
-        const response = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m,weather_code,is_day,uv_index&timezone=Europe/Amsterdam`
-        );
+      const weather = await fetchCityWeather(city.slug);
+      if (weather) return weather;
 
-        if (!response.ok) throw new Error("API error");
-
-        const data = await response.json();
-        const dryingScore = calculateDryingScore(
-          data.current.temperature_2m,
-          data.current.relative_humidity_2m,
-          data.current.wind_speed_10m,
-          data.current.precipitation,
-          data.current.cloud_cover,
-          data.current.uv_index || 0
-        );
-
-        return {
-          slug: city.slug,
-          name: city.name,
-          temperature: Math.round(data.current.temperature_2m),
-          humidity: data.current.relative_humidity_2m,
-          dryingScore,
-          weatherCode: data.current.weather_code,
-          isDayTime: data.current.is_day === 1,
-        };
-      } catch {
-        return {
-          slug: city.slug,
-          name: city.name,
-          temperature: 0,
-          humidity: 0,
-          dryingScore: 0,
-          weatherCode: 0,
-          isDayTime: true,
-        };
-      }
+      // Fallback
+      return {
+        slug: city.slug,
+        name: city.name,
+        temperature: 0,
+        humidity: 0,
+        dryingScore: 0,
+        weatherCode: 0,
+        isDayTime: true,
+      };
     })
   );
 
