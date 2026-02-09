@@ -713,32 +713,26 @@ export default function Home() {
       <AnimatePresence>
         {showCookieBanner && (
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[95%] max-w-lg z-[200]"
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="fixed bottom-6 right-6 w-auto max-w-[280px] z-[200]"
           >
-            <div className="glass-card rounded-2xl p-5 flex flex-col items-center gap-4">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-2xl">🧺</span>
-                <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${isDark ? 'text-cyan-400' : 'text-sky-600'}`}>Cookiemelding</span>
-                <span className="text-2xl">🍪</span>
-              </div>
-
-              <p className={`text-sm font-bold text-center leading-relaxed ${isDark ? 'text-white' : 'text-sky-950'}`}>
+            <div className={`glass-card rounded-3xl p-4 shadow-xl border backdrop-blur-md transition-all duration-500 hover:scale-[1.02] ${isDark ? 'border-white/10 bg-black/40' : 'border-sky-100 bg-white/60'}`}>
+              <p className={`text-[11px] font-bold leading-relaxed mb-3 ${isDark ? 'text-white/80' : 'text-sky-950'}`}>
                 Een website zonder cookies is als was drogen zonder zon.
               </p>
 
-              <div className="flex gap-3 w-full">
+              <div className="flex items-center justify-between gap-4">
                 <button
                   onClick={() => setShowCookieBanner(false)}
-                  className={`flex-1 py-3 rounded-2xl text-[10px] font-black uppercase tracking-wider transition-all duration-300 ${isDark ? 'bg-white/5 hover:bg-white/10 text-white/50 hover:text-white' : 'bg-sky-50 hover:bg-sky-100 text-sky-400 hover:text-sky-600'}`}
+                  className={`text-[9px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity ${isDark ? 'text-white' : 'text-sky-800'}`}
                 >
                   Niet oké
                 </button>
                 <button
                   onClick={() => setShowCookieBanner(false)}
-                  className={`flex-[2] py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all duration-300 ${isDark ? 'bg-gradient-to-r from-cyan-500 to-emerald-500 text-black shadow-lg shadow-cyan-500/20' : 'bg-gradient-to-r from-sky-500 to-sky-400 text-white shadow-lg shadow-sky-500/20'}`}
+                  className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all duration-300 ${isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-sky-100 hover:bg-sky-200 text-sky-800'}`}
                 >
                   Oké
                 </button>
