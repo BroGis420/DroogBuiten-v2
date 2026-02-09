@@ -718,15 +718,15 @@ export default function Home() {
             exit={{ opacity: 0, y: 50 }}
             className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[95%] max-w-lg z-[200]"
           >
-            <div className="glass-card rounded-2xl p-5 flex flex-col items-center gap-4 text-center">
+            <div className="glass-card rounded-2xl p-5 flex flex-col items-center gap-4">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-2xl">🧺</span>
-                <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${isDark ? 'text-cyan-400' : 'text-sky-600'}`}>Digitale Wasknijpers</span>
+                <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${isDark ? 'text-cyan-400' : 'text-sky-600'}`}>Cookiemelding</span>
                 <span className="text-2xl">🍪</span>
               </div>
 
               <p className={`text-sm font-bold text-center leading-relaxed ${isDark ? 'text-white' : 'text-sky-950'}`}>
-                We gebruiken een paar data-knijpers om je ervaring strak te houden. Geen kreukels in de code, beloofd!
+                Een website zonder cookies is als was drogen zonder zon.
               </p>
 
               <div className="flex gap-3 w-full">
@@ -734,13 +734,13 @@ export default function Home() {
                   onClick={() => setShowCookieBanner(false)}
                   className={`flex-1 py-3 rounded-2xl text-[10px] font-black uppercase tracking-wider transition-all duration-300 ${isDark ? 'bg-white/5 hover:bg-white/10 text-white/50 hover:text-white' : 'bg-sky-50 hover:bg-sky-100 text-sky-400 hover:text-sky-600'}`}
                 >
-                  Zonder knijpers
+                  Niet oké
                 </button>
                 <button
                   onClick={() => setShowCookieBanner(false)}
                   className={`flex-[2] py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all duration-300 ${isDark ? 'bg-gradient-to-r from-cyan-500 to-emerald-500 text-black shadow-lg shadow-cyan-500/20' : 'bg-gradient-to-r from-sky-500 to-sky-400 text-white shadow-lg shadow-sky-500/20'}`}
                 >
-                  Knijp hem maar!
+                  Oké
                 </button>
               </div>
             </div>
