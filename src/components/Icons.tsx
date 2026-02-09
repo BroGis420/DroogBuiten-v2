@@ -39,10 +39,14 @@ export function WoolIcon({ className = "w-6 h-6" }: IconProps) {
 export function JeansIcon({ className = "w-6 h-6" }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none">
-      <path d="M19 3H5a1 1 0 00-1 1v3h16V4a1 1 0 00-1-1z" fill="#60A5FA" />
-      <path d="M4 8l1 13h4l1-10 1 10h4l1-13H4z" fill="#2563EB" />
-      <rect x="8" y="4.5" width="2" height="1.5" fill="white" opacity="0.3" />
-      <rect x="14" y="4.5" width="2" height="1.5" fill="white" opacity="0.3" />
+      {/* Main Jeans Body */}
+      <path d="M5 8c0 0 0 13 1 13h4l1-10 1 10h4c1 0 1-13 1-13H5z" fill="#2563EB" />
+      {/* Waistband Area */}
+      <path d="M19 3H5a1 1 0 00-1 1v4h16V4a1 1 0 00-1-1z" fill="#60A5FA" />
+      {/* Pocket Details (Negative/Opacity) */}
+      <path d="M7 10h3v2H7v-2zM14 10h3v2h-3v-2z" fill="white" opacity="0.2" />
+      {/* Waistband Detail */}
+      <rect x="11" y="4" width="2" height="3" fill="white" opacity="0.3" rx="0.5" />
     </svg>
   );
 }
