@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useTheme } from "@/lib/theme";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { Navbar } from "@/components/Navbar";
 import {
   TShirtIcon,
   JacketIcon,
@@ -155,21 +155,7 @@ export default function StoffenPage() {
         <div className={`absolute top-1/2 -right-48 w-[500px] h-[500px] rounded-full blur-3xl animate-orb-2 ${isDark ? 'bg-emerald-500/15' : 'bg-sky-200/40'}`} />
       </div>
 
-      {/* Header */}
-      <header className={`fixed top-0 left-0 w-full z-50 backdrop-blur-2xl border-b ${isDark ? 'bg-black/30 border-white/5' : 'bg-white/50 border-sky-200/50'}`}>
-        <div className="container mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
-          <Link href="/" className={`flex items-center gap-2 px-4 py-2 rounded-xl glass-card text-sm font-bold transition-all group ${isDark ? 'hover:bg-white/10' : 'hover:bg-white/70'}`}>
-            <svg className={`w-5 h-5 group-hover:-translate-x-1 transition-transform ${isDark ? 'text-cyan-400' : 'text-sky-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            <span className={isDark ? 'text-white' : 'text-sky-900'}>Home</span>
-          </Link>
-          <Link href="/" className="text-xl sm:text-2xl font-black tracking-tighter">
-            <span className={isDark ? 'text-white' : 'text-sky-900'}>DroogWeerVandaag</span><span className="animate-text-shimmer">.nl</span>
-          </Link>
-          <ThemeToggle />
-        </div>
-      </header>
+      <Navbar />
 
       {/* Main Content */}
       <main className="relative z-10 pt-32 pb-20 px-6">
