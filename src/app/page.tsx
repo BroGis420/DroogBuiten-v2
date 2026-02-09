@@ -716,14 +716,14 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed bottom-6 right-6 w-auto max-w-[280px] z-[200]"
+            className="fixed bottom-6 right-6 w-auto z-[200]"
           >
-            <div className={`glass-card rounded-3xl p-4 shadow-xl border backdrop-blur-md transition-all duration-500 hover:scale-[1.02] ${isDark ? 'border-white/10 bg-black/40' : 'border-sky-100 bg-white/60'}`}>
-              <p className={`text-[11px] font-bold leading-relaxed mb-3 ${isDark ? 'text-white/80' : 'text-sky-950'}`}>
+            <div className={`glass-card rounded-3xl p-4 shadow-xl border backdrop-blur-md transition-all duration-500 hover:scale-[1.02] flex items-center gap-6 ${isDark ? 'border-white/10 bg-black/40' : 'border-sky-100 bg-white/60'}`}>
+              <p className={`text-[11px] font-bold whitespace-nowrap ${isDark ? 'text-white/80' : 'text-sky-950'}`}>
                 Een website zonder cookies is als was drogen zonder zon.
               </p>
 
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4 shrink-0">
                 <button
                   onClick={() => setShowCookieBanner(false)}
                   className={`text-[9px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity ${isDark ? 'text-white' : 'text-sky-800'}`}
