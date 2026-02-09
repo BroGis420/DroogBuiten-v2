@@ -444,6 +444,7 @@ export interface HourlyForecast {
   cloudCover: number;
   uvIndex: number;
   dryingScore: number;
+  weatherCode: number;
   isDayTime: boolean;
 }
 
@@ -575,17 +576,17 @@ export function getWeatherDescription(code: number): string {
   return descriptions[code] || "Onbekend";
 }
 
-// Get weather icon based on WMO code
+// Get weather icon based on WMO code (mapped to Bas Milius weather-icons names)
 export function getWeatherIcon(code: number, isDay: boolean): string {
-  if (code === 0 || code === 1) return isDay ? "sunny" : "clear-night";
-  if (code === 2) return isDay ? "partly-cloudy" : "partly-cloudy-night";
+  if (code === 0 || code === 1) return isDay ? "clear-day" : "clear-night";
+  if (code === 2) return isDay ? "partly-cloudy-day" : "partly-cloudy-night";
   if (code === 3) return "cloudy";
-  if (code >= 45 && code <= 48) return "foggy";
+  if (code >= 45 && code <= 48) return "fog";
   if (code >= 51 && code <= 55) return "drizzle";
-  if (code >= 61 && code <= 65) return "rainy";
-  if (code >= 71 && code <= 75) return "snowy";
-  if (code >= 80 && code <= 82) return "rainy";
-  if (code === 95) return "stormy";
+  if (code >= 61 && code <= 65) return "rain";
+  if (code >= 71 && code <= 75) return "snow";
+  if (code >= 80 && code <= 82) return "rain";
+  if (code === 95) return "thunderstorms";
   return "cloudy";
 }
 
@@ -597,7 +598,7 @@ export async function fetchWeatherData(citySlug: string): Promise<WeatherData | 
 
   try {
     const response = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m,weather_code,is_day,uv_index&hourly=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m,uv_index,is_day&timezone=Europe/Amsterdam&forecast_days=2`
+      `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m,weather_code,is_day,uv_index&hourly=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m,uv_index,is_day,weather_code&timezone=Europe/Amsterdam&forecast_days=2`
     );
 
     if (!response.ok) throw new Error("Weather API error");
@@ -622,6 +623,7 @@ export async function fetchWeatherData(citySlug: string): Promise<WeatherData | 
       const precip = data.hourly.precipitation[i];
       const cloud = data.hourly.cloud_cover[i];
       const uv = data.hourly.uv_index[i] || 0;
+      const weatherCode = data.hourly.weather_code[i];
 
       return {
         time,
@@ -632,6 +634,7 @@ export async function fetchWeatherData(citySlug: string): Promise<WeatherData | 
         cloudCover: cloud,
         uvIndex: uv,
         dryingScore: calculateDryingScore(temp, hum, wind, precip, cloud, uv),
+        weatherCode,
         isDayTime: data.hourly.is_day[i] === 1,
       };
     });

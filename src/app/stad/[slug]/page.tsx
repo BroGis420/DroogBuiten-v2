@@ -179,12 +179,8 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
                   <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${isDark ? 'bg-gradient-to-br from-orange-400 to-red-500' : 'bg-gradient-to-br from-orange-300 to-red-400'}`} />
                   <div className={`text-sm font-bold uppercase tracking-wider mb-2 ${isDark ? 'text-white/60' : 'text-sky-700/60'}`}>Temperatuur</div>
                   <div className="flex items-center gap-2">
-                    <svg className={`w-8 h-8 ${isDark ? 'text-orange-400' : 'text-orange-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01" style={{ display: 'none' }} />
-                      {/* Using a simple thermometer-like icon or generic temp icon if available, otherwise generic */}
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13V5a3 3 0 00-6 0v8a5 5 0 106 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2" />
+                    <svg className={`w-8 h-8 ${isDark ? 'text-orange-400' : 'text-orange-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z" />
                     </svg>
                     <div className={`text-4xl font-black ${isDark ? 'text-white' : 'text-sky-950'}`}>{weather.current.temperature}°</div>
                   </div>
@@ -195,8 +191,8 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
                   <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${isDark ? 'bg-gradient-to-br from-cyan-400 to-blue-500' : 'bg-gradient-to-br from-cyan-300 to-blue-400'}`} />
                   <div className={`text-sm font-bold uppercase tracking-wider mb-2 ${isDark ? 'text-white/60' : 'text-sky-700/60'}`}>Vochtigheid</div>
                   <div className="flex items-center gap-2">
-                    <svg className={`w-8 h-8 ${isDark ? 'text-cyan-400' : 'text-sky-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    <svg className={`w-8 h-8 ${isDark ? 'text-cyan-400' : 'text-sky-500'}`} fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2.5c-3.12 4.28-7 9.6-7 13.5 0 3.87 3.13 7 7 7s7-3.13 7-7c0-3.9-3.88-9.22-7-13.5z" />
                     </svg>
                     <div className={`text-4xl font-black ${isDark ? 'text-white' : 'text-sky-950'}`}>{weather.current.humidity}%</div>
                   </div>
@@ -233,24 +229,55 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
             <div className="flex items-center justify-between mb-6">
-              <h2 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-sky-950'}`}>Uurlijkse Voorspelling</h2>
+              <h2 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-sky-950'}`}>Zal het de komende uren droog blijven?</h2>
               <span className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-white/40' : 'text-sky-700/60'}`}>Komende 12 uur</span>
             </div>
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-3">
               {upcomingHours.map((hour, i) => {
                 const time = new Date(hour.time);
                 const isNow = time.getHours() === currentHour;
+
+                // Calculate window color & label
+                let statusColor = "";
+                let statusLabel = "";
+                let statusTextColor = "";
+
+                if (hour.precipitation > 0) {
+                  statusColor = isDark ? 'border-red-500/80 bg-red-500/10' : 'border-red-500 bg-red-50';
+                  statusLabel = "Regen";
+                  statusTextColor = isDark ? "text-red-400" : "text-red-600";
+                } else if (hour.dryingScore >= 60) {
+                  statusColor = isDark ? 'border-emerald-500/80 bg-emerald-500/10' : 'border-emerald-500 bg-emerald-50';
+                  statusLabel = "Goed";
+                  statusTextColor = isDark ? "text-emerald-400" : "text-emerald-600";
+                } else if (hour.dryingScore >= 40) {
+                  statusColor = isDark ? 'border-orange-500/80 bg-orange-500/10' : 'border-orange-500 bg-orange-50';
+                  statusLabel = "Matig";
+                  statusTextColor = isDark ? "text-orange-400" : "text-orange-600";
+                } else {
+                  statusColor = isDark ? 'border-red-500/80 bg-red-500/10' : 'border-red-500 bg-red-50';
+                  statusLabel = "Slecht";
+                  statusTextColor = isDark ? "text-red-400" : "text-red-600";
+                }
+
                 return (
                   <motion.div key={hour.time} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 + i * 0.05 }}
-                    className={`glass-card rounded-2xl p-3 text-center ${isNow ? (isDark ? 'ring-2 ring-cyan-500/50' : 'ring-2 ring-sky-500/50') : ''}`}>
-                    <div className={`text-xs font-bold mb-1 ${isDark ? 'text-white/70' : 'text-sky-800/80'}`}>{time.getHours()}:00</div>
-                    <div className={`text-xl font-black ${isDark ? 'text-white' : 'text-sky-950'}`}>{hour.temperature}°</div>
+                    className={`glass-card rounded-2xl p-3 text-center border-2 flex flex-col items-center justify-between ${statusColor} ${isNow ? 'scale-110 shadow-lg z-10' : ''}`}>
+                    <p className={`text-sm font-medium mb-1 ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>
+                      {new Date(hour.time).getHours()}:00
+                    </p>
+                    <div className="flex justify-center my-2">
+                      <img
+                        src={`https://raw.githubusercontent.com/basmilius/weather-icons/master/production/fill/all/${getWeatherIcon(hour.weatherCode, hour.isDayTime)}.svg`}
+                        alt={getWeatherDescription(hour.weatherCode)}
+                        className="w-10 h-10"
+                      />
+                    </div>
+                    <p className={`text-lg font-bold mb-2 ${isDark ? 'text-white' : 'text-slate-800'}`}>{Math.round(hour.temperature)}°</p>
 
-                    <div className="flex items-center justify-center gap-1 mt-2">
-                      <svg className={`w-3 h-3 ${isDark ? 'text-cyan-400' : 'text-sky-500'}`} fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z" />
-                      </svg>
-                      <span className={`text-[10px] font-bold ${isDark ? 'text-white/50' : 'text-sky-700/60'}`}>{hour.humidity}%</span>
+                    {/* Explicit Status Label - Centered */}
+                    <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${statusTextColor} bg-white/10 border ${isDark ? 'border-white/10' : 'border-black/5'} w-full`}>
+                      {statusLabel}
                     </div>
                   </motion.div>
                 );
