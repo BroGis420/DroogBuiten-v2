@@ -8,8 +8,11 @@ interface IconProps {
 export function TShirtIcon({ className = "w-6 h-6" }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M6 8v11a2 2 0 002 2h8a2 2 0 002-2V8" />
-      <path d="M4 5l4 2 2-2h4l2 2 4-2v3a1 1 0 01-1 1h-2v1h-8v-1h-2a1 1 0 01-1-1V5z" />
+      <path d="M6 8v12a1 1 0 001 1h10a1 1 0 001-1V8" />
+      <path d="M4 5v3a1 1 0 001 1h3v12" />
+      <path d="M20 5v3a1 1 0 01-1 1h-3" />
+      <path d="M9 5h6" />
+      <path d="M9 5c0-1 1-2 3-2s3 1 3 2" />
     </svg>
   );
 }
@@ -17,11 +20,11 @@ export function TShirtIcon({ className = "w-6 h-6" }: IconProps) {
 export function JacketIcon({ className = "w-6 h-6" }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M6 3L3 6v15h18V6l-3-3" />
       <path d="M12 3v18" />
-      <path d="M6 8l3 3" />
-      <path d="M18 8l-3 3" />
-      <path d="M3 6l9 4 9-4" />
+      <path d="M5 20V7l4-4h6l4 4v13" />
+      <path d="M5 8h14" />
+      <path d="M9 3v5" />
+      <path d="M15 3v5" />
     </svg>
   );
 }
@@ -29,10 +32,11 @@ export function JacketIcon({ className = "w-6 h-6" }: IconProps) {
 export function WoolIcon({ className = "w-6 h-6" }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="9" cy="9" r="4" />
-      <circle cx="15" cy="15" r="4" />
-      <path d="M15 9a4 4 0 00-4 4" />
-      <path d="M9 15a4 4 0 004-4" />
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 3c3 3 3 8 0 11s-3 3-6 0" />
+      <path d="M21 12c-3-3-8-3-11 0s-3 3 0 6" />
+      <path d="M12 21c-3-3-3-8 0-11s3-3 6 0" />
+      <path d="M3 12c3 3 8 3 11 0s3-3 0-6" />
     </svg>
   );
 }
@@ -40,10 +44,11 @@ export function WoolIcon({ className = "w-6 h-6" }: IconProps) {
 export function JeansIcon({ className = "w-6 h-6" }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M6 2h12a1 1 0 011 1v2H5V3a1 1 0 011-1z" />
-      <path d="M5 5l1 17h4l1-10 1 10h4l1-17" />
-      <path d="M9 5v4" />
-      <path d="M15 5v4" />
+      <path d="M5 2h14v3H5z" />
+      <path d="M5 5l1 17h5l1-10 1 10h5l1-17" />
+      <path d="M10 5v5" />
+      <path d="M14 5v5" />
+      <path d="M5 8h14" />
     </svg>
   );
 }
@@ -51,10 +56,9 @@ export function JeansIcon({ className = "w-6 h-6" }: IconProps) {
 export function ShirtIcon({ className = "w-6 h-6" }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.47a2 2 0 00-1.34-2.23z" />
-      <path d="M12 8v10" />
-      <path d="M12 11h.01" />
-      <path d="M12 14h.01" />
+      <path d="M12 21V9" />
+      <path d="M6 3.5L12 9l6-5.5" />
+      <path d="M20 7v14H4V7l4-4h8l4 4z" />
     </svg>
   );
 }
@@ -62,8 +66,9 @@ export function ShirtIcon({ className = "w-6 h-6" }: IconProps) {
 export function SilkIcon({ className = "w-6 h-6" }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2C8 2 4 6 4 10c0 6 8 12 8 12s8-6 8-12c0-4-4-8-8-8z" />
-      <path d="M12 22a8.5 8.5 0 000-17" />
+      <path d="M5 3c0 10 14 10 14 18" />
+      <path d="M19 3C19 13 5 13 5 21" />
+      <path d="M12 3v18" />
     </svg>
   );
 }
@@ -71,10 +76,11 @@ export function SilkIcon({ className = "w-6 h-6" }: IconProps) {
 export function TowelIcon({ className = "w-6 h-6" }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="4" y="4" width="16" height="16" rx="2" />
-      <path d="M4 9h16" />
+      <rect x="4" y="6" width="16" height="12" rx="1" />
+      <path d="M4 10h16" />
       <path d="M4 14h16" />
-      <path d="M12 4v16" />
+      <path d="M8 6v12" />
+      <path d="M16 6v12" />
     </svg>
   );
 }
@@ -82,11 +88,10 @@ export function TowelIcon({ className = "w-6 h-6" }: IconProps) {
 export function BedIcon({ className = "w-6 h-6" }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M2 4v16" />
-      <path d="M22 4v16" />
-      <path d="M2 8h20" />
-      <path d="M2 17h20" />
-      <path d="M6 8v3a2 2 0 002 2h8a2 2 0 002-2V8" />
+      <path d="M2 20V8a2 2 0 012-2h16a2 2 0 012 2v12" />
+      <path d="M2 13h20" />
+      <circle cx="7" cy="10" r="1.5" />
+      <circle cx="17" cy="10" r="1.5" />
     </svg>
   );
 }
@@ -104,7 +109,7 @@ export function SunIcon({ className = "w-6 h-6" }: IconProps) {
 export function CloudSunIcon({ className = "w-6 h-6" }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2v2M4.93 4.93l1.41 1.41M2 12h2M19.07 4.93l-1.41 1.41" />
+      <path d="M12 2v2M4.93 4.93l1.41 1.41M2 12h2" />
       <circle cx="12" cy="8" r="3" />
       <path d="M18 18H6a4 4 0 010-8h.5a5.5 5.5 0 0111 0H18a3 3 0 010 6z" />
     </svg>
@@ -143,8 +148,8 @@ export function CalculatorIcon({ className = "w-6 h-6" }: IconProps) {
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="4" y="2" width="16" height="20" rx="2" />
       <path d="M8 6h8" />
-      <path d="M16 14v-4H8v4h8z" />
-      <path d="M8 18h8" />
+      <path d="M8 10h8M8 14h8M8 18h8" />
+      <path d="M12 10v8" />
     </svg>
   );
 }
@@ -173,7 +178,7 @@ export function AlertIcon({ className = "w-6 h-6" }: IconProps) {
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
       <path d="M12 9v4" />
-      <path d="M12 17h.01" />
+      <circle cx="12" cy="17" r="0.5" fill="currentColor" />
     </svg>
   );
 }
@@ -241,19 +246,33 @@ export function ArrowLeftIcon({ className = "w-6 h-6" }: IconProps) {
 export function FabricIcon({ className = "w-6 h-6" }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 6h18" />
-      <path d="M3 12h18" />
-      <path d="M3 18h18" />
-      <path d="M6 3v18" />
-      <path d="M12 3v18" />
-      <path d="M18 3v18" />
+      <path d="M3 6h18M3 12h18M3 18h18" />
+      <path d="M6 3v18M12 3v18M18 3v18" />
     </svg>
   );
 }
 
+// Specialty Icons (Basic Style)
+export function CottonIcon({ className = "w-6 h-6" }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      {/* Cotton Boll (The fluffy part) */}
+      <path d="M12 14c2.5 0 4.5-2 4.5-4.5S14.5 5 12 5 7.5 7 7.5 9.5 9.5 14 12 14z" />
+      <path d="M8 11.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7z" />
+      <path d="M16 11.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z" />
+      {/* Stem/Leaves (The bottom part) */}
+      <path d="M12 14v6" />
+      <path d="M12 14c-1.5 1.5-3.5 2-5 2" />
+      <path d="M12 14c1.5 1.5 3.5 2 5 2" />
+      <path d="M12 14v3" />
+    </svg>
+  );
+}
+
+
 // Icon mapping for fabric types
 export const fabricIcons: Record<string, React.FC<IconProps>> = {
-  cotton: TShirtIcon,
+  cotton: CottonIcon,
   synthetic: JacketIcon,
   wool: WoolIcon,
   denim: JeansIcon,
