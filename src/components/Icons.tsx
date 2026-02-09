@@ -8,9 +8,13 @@ interface IconProps {
 export function TShirtIcon({ className = "w-6 h-6" }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none">
-      <path d="M12 4c-2 0-3.5 1-3.5 2 0 .5.5 1 1.5 1v11c0 .5.5 1 1 1h2c.5 0 1-.5 1-1V7c1 0 1.5-.5 1.5-1 0-1-1.5-2-3.5-2z" fill="#F3F4F6" />
-      <path d="M7 6L3 7v4c0 .5.5 1 1 1h2V8l.5-1.5L7 6z" fill="#E5E7EB" />
-      <path d="M17 6l4 1v4c0 .5-.5 1-1 1h-2V8l-.5-1.5L17 6z" fill="#E5E7EB" />
+      {/* T-Shirt Body (Darker for visibility) */}
+      <path d="M12 4c-2 0-3.5 1-3.5 2 0 .5.5 1 1.5 1v11c0 .5.5 1 1 1h2c.5 0 1-.5 1-1V7c1 0 1.5-.5 1.5-1 0-1-1.5-2-3.5-2z" fill="#CBD5E1" />
+      {/* Sleeves (Slightly darker slate) */}
+      <path d="M7 6L3 7v4c0 .5.5 1 1 1h2V8l.5-1.5L7 6z" fill="#94A3B8" />
+      <path d="M17 6l4 1v4c0 .5-.5 1-1 1h-2V8l-.5-1.5L17 6z" fill="#94A3B8" />
+      {/* Subtle Highlight */}
+      <path d="M12 4c1 0 1.5.5 1.5 1s-.5 1-1.5 1-1.5-.5-1.5-1s.5-1 1.5-1z" fill="white" opacity="0.3" />
     </svg>
   );
 }
@@ -64,8 +68,8 @@ export function ShirtIcon({ className = "w-6 h-6" }: IconProps) {
 export function SilkIcon({ className = "w-6 h-6" }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none">
-      <path d="M12 2C8 2 4 6 4 10c0 6 8 12 8 12s8-6 8-12c0-4-4-8-8-8z" fill="#EC4899" />
-      <path d="M12 5c-2 2-2 5 0 8 2-3 2-6 0-8z" fill="white" opacity="0.3" />
+      <path d="M12 2C8 2 4 6 4 10c0 6 8 12 8 12s8-6 8-12c0-4-4-8-8-8z" fill="#DB2777" />
+      <path d="M12 5c-2 2-2 5 0 8 2-3 2-6 0-8z" fill="white" opacity="0.4" />
     </svg>
   );
 }
@@ -253,14 +257,18 @@ export function FabricIcon({ className = "w-6 h-6" }: IconProps) {
 export function CottonIcon({ className = "w-6 h-6" }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none">
-      {/* Cotton Boll (Solid) */}
-      <path d="M12 14c2.5 0 4.5-2 4.5-4.5S14.5 5 12 5 7.5 7 7.5 9.5 9.5 14 12 14z" fill="#F9FAFB" />
-      <circle cx="8" cy="7.5" r="3.5" fill="#F9FAFB" />
-      <circle cx="16" cy="7.5" r="3.5" fill="#F9FAFB" />
-      {/* Stem/Leaves (Solid) */}
-      <path d="M12 14v6h-1v-6h1z" fill="#166534" opacity="0.8" />
-      <path d="M12 14c-1.5 1.5-3.5 2-5 2l1-1c1.5 0 3.5-.5 4-1z" fill="#15803D" />
-      <path d="M12 14c1.5 1.5 3.5 2 5 2l-1-1c-1.5 0-3.5-.5-4-1z" fill="#15803D" />
+      {/* Cotton Boll Background (Solid Slate for visibility) */}
+      <path d="M12 14c2.5 0 4.5-2 4.5-4.5S14.5 5 12 5 7.5 7 7.5 9.5 9.5 14 12 14z" fill="#E2E8F0" />
+      <circle cx="8" cy="7.5" r="3.5" fill="#E2E8F0" />
+      <circle cx="16" cy="7.5" r="3.5" fill="#E2E8F0" />
+      {/* Cotton Boll Highlight (White Shine) */}
+      <circle cx="12" cy="8" r="3" fill="white" opacity="0.6" />
+      <circle cx="8" cy="7.5" r="2" fill="white" opacity="0.4" />
+      <circle cx="16" cy="7.5" r="2" fill="white" opacity="0.4" />
+      {/* Stem/Leaves (Vibrant Green) */}
+      <path d="M12 14v6h-1v-6h1z" fill="#15803D" />
+      <path d="M12 14c-1.5 1.5-3.5 2-5 2l.5-.8c1.5 0 3.5-.5 4-1.2z" fill="#166534" />
+      <path d="M12 14c1.5 1.5 3.5 2 5 2l-.5-.8c-1.5 0-3.5-.5-4-1.2z" fill="#166534" />
     </svg>
   );
 }
