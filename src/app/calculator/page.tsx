@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useTheme } from "@/lib/theme";
 import { ThemeToggle } from "@/components/ThemeToggle";
+
 import {
   TShirtIcon,
   JacketIcon,
@@ -66,10 +68,13 @@ const temperatures = [
   { id: "hot", name: "Heet (>25°C)", multiplier: 0.6 },
 ];
 
-export default function CalculatorPage() {
+function CalculatorContent() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
-  const [selectedFabric, setSelectedFabric] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const fabricParam = searchParams.get("fabric");
+
+  const [selectedFabric, setSelectedFabric] = useState<string | null>(fabricParam);
   const [selectedWeather, setSelectedWeather] = useState<string>("partly-cloudy");
   const [selectedTemp, setSelectedTemp] = useState<string>("mild");
   const [quantity, setQuantity] = useState<number>(1);
@@ -158,11 +163,10 @@ export default function CalculatorPage() {
                     <button
                       key={fabric.id}
                       onClick={() => setSelectedFabric(fabric.id)}
-                      className={`p-4 rounded-2xl border-2 transition-all duration-300 text-left ${
-                        selectedFabric === fabric.id
-                          ? isDark ? "border-cyan-500 bg-cyan-500/10" : "border-sky-500 bg-sky-500/10"
-                          : isDark ? "border-white/10 hover:border-white/30 hover:bg-white/5" : "border-sky-200 hover:border-sky-400 hover:bg-white/50"
-                      }`}
+                      className={`p-4 rounded-2xl border-2 transition-all duration-300 text-left ${selectedFabric === fabric.id
+                        ? isDark ? "border-cyan-500 bg-cyan-500/10" : "border-sky-500 bg-sky-500/10"
+                        : isDark ? "border-white/10 hover:border-white/30 hover:bg-white/5" : "border-sky-200 hover:border-sky-400 hover:bg-white/50"
+                        }`}
                     >
                       <IconComponent className={`w-8 h-8 mb-2 ${selectedFabric === fabric.id ? (isDark ? 'text-cyan-400' : 'text-sky-600') : (isDark ? 'text-white/60' : 'text-sky-700/60')}`} />
                       <span className={`font-bold block ${isDark ? 'text-white' : 'text-sky-900'}`}>{fabric.name}</span>
@@ -186,11 +190,10 @@ export default function CalculatorPage() {
                     <button
                       key={weather.id}
                       onClick={() => setSelectedWeather(weather.id)}
-                      className={`p-4 rounded-2xl border-2 transition-all duration-300 text-center ${
-                        selectedWeather === weather.id
-                          ? isDark ? "border-emerald-500 bg-emerald-500/10" : "border-sky-500 bg-sky-500/10"
-                          : isDark ? "border-white/10 hover:border-white/30 hover:bg-white/5" : "border-sky-200 hover:border-sky-400 hover:bg-white/50"
-                      }`}
+                      className={`p-4 rounded-2xl border-2 transition-all duration-300 text-center ${selectedWeather === weather.id
+                        ? isDark ? "border-emerald-500 bg-emerald-500/10" : "border-sky-500 bg-sky-500/10"
+                        : isDark ? "border-white/10 hover:border-white/30 hover:bg-white/5" : "border-sky-200 hover:border-sky-400 hover:bg-white/50"
+                        }`}
                     >
                       <IconComponent className={`w-8 h-8 mx-auto mb-2 ${selectedWeather === weather.id ? (isDark ? 'text-emerald-400' : 'text-sky-600') : (isDark ? 'text-white/60' : 'text-sky-700/60')}`} />
                       <span className={`font-bold text-sm ${isDark ? 'text-white' : 'text-sky-900'}`}>{weather.name}</span>
@@ -211,11 +214,10 @@ export default function CalculatorPage() {
                   <button
                     key={temp.id}
                     onClick={() => setSelectedTemp(temp.id)}
-                    className={`p-4 rounded-2xl border-2 transition-all duration-300 text-center ${
-                      selectedTemp === temp.id
-                        ? "border-yellow-500 bg-yellow-500/10"
-                        : isDark ? "border-white/10 hover:border-white/30 hover:bg-white/5" : "border-sky-200 hover:border-sky-400 hover:bg-white/50"
-                    }`}
+                    className={`p-4 rounded-2xl border-2 transition-all duration-300 text-center ${selectedTemp === temp.id
+                      ? "border-yellow-500 bg-yellow-500/10"
+                      : isDark ? "border-white/10 hover:border-white/30 hover:bg-white/5" : "border-sky-200 hover:border-sky-400 hover:bg-white/50"
+                      }`}
                   >
                     <span className={`font-bold ${isDark ? 'text-white' : 'text-sky-900'}`}>{temp.name}</span>
                   </button>
@@ -302,5 +304,13 @@ export default function CalculatorPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function CalculatorPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CalculatorContent />
+    </Suspense>
   );
 }

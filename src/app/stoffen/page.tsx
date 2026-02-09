@@ -201,8 +201,8 @@ export default function StoffenPage() {
                     transition={{ delay: index * 0.1 }}
                     onClick={() => setSelectedFabric(fabric.id)}
                     className={`w-full p-4 rounded-2xl text-left transition-all duration-300 flex items-center gap-4 ${selectedFabric === fabric.id
-                        ? isDark ? "glass-card border-2 border-cyan-500/50" : "glass-card border-2 border-sky-500/50"
-                        : isDark ? "bg-white/5 hover:bg-white/10 border-2 border-transparent" : "bg-white/50 hover:bg-white/70 border-2 border-transparent"
+                      ? isDark ? "glass-card border-2 border-cyan-500/50" : "glass-card border-2 border-sky-500/50"
+                      : isDark ? "bg-white/5 hover:bg-white/10 border-2 border-transparent" : "bg-white/50 hover:bg-white/70 border-2 border-transparent"
                       }`}
                   >
                     <IconComponent className={`w-10 h-10 ${selectedFabric === fabric.id ? (isDark ? 'text-cyan-400' : 'text-sky-600') : (isDark ? 'text-white/60' : 'text-sky-700/60')}`} />
@@ -322,10 +322,10 @@ export default function StoffenPage() {
 
                     {/* CTA */}
                     <Link
-                      href="/"
+                      href={`/calculator?fabric=${activeFabric.id}`}
                       className={`mt-8 w-full p-4 rounded-3xl text-center block transition-all duration-300 font-black uppercase tracking-[0.2em] text-[11px] hover:scale-[1.02] active:scale-95 shadow-xl ${isDark
-                          ? 'bg-gradient-to-r from-cyan-500 to-emerald-500 text-black shadow-cyan-500/20'
-                          : 'bg-gradient-to-r from-sky-500 to-sky-400 text-white shadow-sky-500/20'
+                        ? 'bg-gradient-to-r from-cyan-500 to-emerald-500 text-black shadow-cyan-500/20'
+                        : 'bg-gradient-to-r from-sky-500 to-sky-400 text-white shadow-sky-500/20'
                         }`}
                     >
                       Check Droogscore voor {activeFabric.name}
