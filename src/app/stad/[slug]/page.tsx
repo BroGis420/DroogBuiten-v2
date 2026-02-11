@@ -8,6 +8,7 @@ import { useTheme } from "@/lib/theme";
 import { Navbar } from "@/components/Navbar";
 import { getDryingVerdict, checkIfRaining } from "@/lib/drying-logic";
 import { ProductSuggestion } from "@/components/ProductSuggestion";
+import { IndoorSolutions } from "@/components/IndoorSolutions";
 
 function DryingScoreGauge({ score, isDark }: { score: number; isDark: boolean }) {
   const getScoreColor = (s: number) => {
@@ -220,8 +221,8 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
           </div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-sky-950'}`}>Zal het de komende uren droog blijven?</h2>
+            <div className="text-center mb-10">
+              <h2 className={`text-2xl sm:text-3xl font-black tracking-tight mb-2 ${isDark ? 'text-white' : 'text-sky-950'}`}>Blijft het zo?</h2>
               <span className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-white/40' : 'text-sky-700/60'}`}>Komende 12 uur</span>
             </div>
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-3">
@@ -262,7 +263,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
                       <img
                         src={`https://raw.githubusercontent.com/basmilius/weather-icons/master/production/fill/all/${getWeatherIcon(hour.weatherCode, hour.isDayTime)}.svg`}
                         alt={getWeatherDescription(hour.weatherCode)}
-                        className="w-10 h-10"
+                        className={`w-10 h-10 ${!isDark ? 'brightness-[0.6] contrast-125 drop-shadow-sm' : ''}`}
                       />
                     </div>
                     <p className={`text-lg font-bold mb-2 ${isDark ? 'text-white' : 'text-slate-800'}`}>{Math.round(hour.temperature)}°</p>
@@ -277,8 +278,13 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
             </div>
           </motion.div>
 
+
           {verdict && (
-            <ProductSuggestion category={verdict.verdict} />
+            verdict.verdict === 'NEE' ? (
+              <IndoorSolutions />
+            ) : (
+              <ProductSuggestion category={verdict.verdict} />
+            )
           )}
         </div>
       </main>

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { dutchCities, allDutchPlaces, fetchAllCitiesWeather, fetchCityWeather, getWeatherIcon } from "@/lib/weather";
 import { useTheme } from "@/lib/theme";
 import { Navbar } from "@/components/Navbar";
+import { ThermometerIcon, DropletIcon, WindIcon, AlertIcon } from "@/components/Icons";
 
 // Weather icon component
 function WeatherIcon({ type }: { type: string }) {
@@ -319,35 +320,25 @@ export default function Home() {
       <Navbar />
 
       {/* Main Content - Reorganized for better UX */}
-      <main className="relative z-10 pt-28 sm:pt-32 pb-20 px-6">
+      <main className="relative z-10 pt-32 sm:pt-40 pb-20 px-6">
         <div className="container mx-auto max-w-5xl">
 
           {/* Hero Section - Compact & Focused */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-10"
+            className="text-center mb-20"
           >
-            {/* Live status badge */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6"
-            >
-              <div className={`w-2 h-2 rounded-full animate-pulse ${isDark ? 'bg-emerald-400' : 'bg-amber-500'}`} />
-              <span className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-white/70' : 'text-sky-700'}`}>
-                {loadingWeather ? "Weer laden..." : `Landelijk gemiddelde: ${avgDryingScore}% droogscore`}
-              </span>
-            </motion.div>
+
 
             {/* Main headline - Compact */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter leading-[0.9] mb-4">
-              <span className={isDark ? 'text-white' : 'text-sky-950'}>Kan ik mijn was </span>
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tighter leading-tight mb-6 mx-auto whitespace-nowrap text-center">
+              <span className={isDark ? 'text-white' : 'text-sky-950'}>Kan mijn was vandaag </span>
               <span className="animate-text-shimmer">buiten drogen?</span>
             </h1>
 
-            <p className={`font-medium text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed ${isDark ? 'text-white/60' : 'text-sky-800/70'}`}>
-              Slimme wasdroogvoorspeller voor {allDutchPlaces.length}+ Nederlandse locaties
+            <p className={`font-medium text-base sm:text-xl max-w-3xl mx-auto leading-relaxed ${isDark ? 'text-white/60' : 'text-sky-800/70'}`}>
+              Bekijk het direct voor elke plek in Nederland.
             </p>
           </motion.section>
 
@@ -371,7 +362,7 @@ export default function Home() {
                   }}
                   onFocus={() => searchValue.length > 0 && setShowDropdown(true)}
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  placeholder="Zoek je stad of gemeente..."
+                  placeholder="Typ je plaats..."
                   className="w-full px-8 py-6 rounded-2xl modern-input text-lg font-semibold outline-none"
                 />
                 <button
@@ -404,7 +395,7 @@ export default function Home() {
                       >
                         <div className="flex items-center gap-3">
                           <svg className={`w-5 h-5 ${isDark ? 'text-cyan-400' : 'text-sky-600'}`} fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5-2.5-1.12 2.5-2.5 2.5z" />
                           </svg>
                           <div className="text-left">
                             <span className={`font-semibold block ${isDark ? 'text-white' : 'text-slate-900'}`}>{place.name}</span>
@@ -437,7 +428,7 @@ export default function Home() {
                   </svg>
                 ) : (
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5-2.5-1.12 2.5-2.5 2.5z" />
                   </svg>
                 )}
                 {loadingGPS ? 'Locatie ophalen...' : 'Gebruik GPS'}
@@ -460,66 +451,125 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {(citiesWeather.length > 0 ? citiesWeather : dutchCities.map(c => ({ ...c, temperature: 0, humidity: 0, dryingScore: 0, weatherCode: 0, isDayTime: true }))).map((city, index) => (
-                <motion.div
-                  key={city.slug}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 + index * 0.05 }}
-                >
-                  <Link
-                    href={`/stad/${city.slug}`}
-                    className="group p-5 sm:p-6 glass-card rounded-2xl text-left overflow-hidden relative block hover:scale-[1.02] transition-all duration-300"
-                  >
-                    {/* Hover gradient */}
-                    <div className={`absolute inset-0 transition-all duration-500 ${isDark ? 'bg-gradient-to-br from-cyan-500/0 to-emerald-500/0 group-hover:from-cyan-500/10 group-hover:to-emerald-500/10' : 'bg-gradient-to-br from-sky-400/0 to-sky-300/0 group-hover:from-sky-400/10 group-hover:to-sky-300/10'}`} />
+              {(citiesWeather.length > 0 ? citiesWeather : dutchCities.map(c => ({ ...c, temperature: 0, humidity: 0, dryingScore: 0, weatherCode: 0, isDayTime: true }))).map((city, index) => {
+                const jaVerdicts = ["Gewoon doen.", "Zeker wel.", "Hang het op.", "Perfect weer.", "Heerlijk fris.", "Ideaal vandaag."];
+                const misschienVerdicts = ["Misschien.", "Gokje wagen?", "Laten we zien.", "Twijfelgeval.", "Even kijken.", "Op eigen risico."];
+                const neeVerdicts = ["Vandaag niet.", "Nope.", "Nee hoor.", "Beter binnen.", "Laat maar.", "Geen succes."];
+                const vIndex = index % 6;
 
-                    <div className="relative z-10 flex items-start justify-between">
-                      <div>
-                        <h3 className={`text-lg sm:text-xl font-black transition-colors duration-300 ${isDark ? 'text-white group-hover:text-cyan-400' : 'text-sky-950 group-hover:text-sky-700'}`}>
+                return (
+                  <motion.div
+                    key={city.slug}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 + index * 0.05 }}
+                  >
+                    <Link
+                      href={`/stad/${city.slug}`}
+                      className="group p-8 glass-card rounded-3xl text-center overflow-hidden relative block hover:scale-[1.02] transition-all duration-300"
+                    >
+                      {/* Hover gradient */}
+                      <div className={`absolute inset-0 transition-all duration-500 ${isDark ? 'bg-gradient-to-br from-cyan-500/0 to-emerald-500/0 group-hover:from-cyan-500/10 group-hover:to-emerald-500/10' : 'bg-gradient-to-br from-sky-400/0 to-sky-300/0 group-hover:from-sky-400/10 group-hover:to-sky-300/10'}`} />
+
+                      <div className="relative z-10 space-y-2">
+                        <h3 className={`text-xl font-black transition-colors duration-300 ${isDark ? 'text-white group-hover:text-cyan-400' : 'text-sky-950 group-hover:text-sky-700'}`}>
                           {city.name}
                         </h3>
-                        {!loadingWeather && (
-                          <div className={`flex flex-col gap-1 mt-2`}>
-                            <div className={`flex items-center gap-1.5 text-sm ${isDark ? 'text-white/60' : 'text-sky-700/80'}`}>
-                              {/* Thermometer icon */}
-                              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M15 13V5c0-1.66-1.34-3-3-3S9 3.34 9 5v8c-1.21.91-2 2.37-2 4 0 2.76 2.24 5 5 5s5-2.24 5-5c0-1.63-.79-3.09-2-4zm-4-8c0-.55.45-1 1-1s1 .45 1 1h-1v1h1v2h-1v1h1v2h-2V5z" />
-                              </svg>
-                              <span className="font-semibold">{city.temperature}°C</span>
-                            </div>
-                            <div className={`flex items-center gap-1.5 text-sm ${isDark ? 'text-white/60' : 'text-sky-700/80'}`}>
-                              {/* Water drop icon */}
-                              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8zm0 18c-3.35 0-6-2.57-6-6.2 0-2.34 1.95-5.44 6-9.14 4.05 3.7 6 6.79 6 9.14 0 3.63-2.65 6.2-6 6.2z" />
-                              </svg>
-                              <span className="font-semibold">{city.humidity}%</span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
 
-                      {/* Drying score badge */}
-                      <div className={`flex flex-col items-center ${loadingWeather ? 'opacity-50' : ''}`}>
-                        <div className={`text-xl sm:text-2xl font-black ${city.dryingScore >= 70 ? (isDark ? 'text-emerald-400' : 'text-emerald-500') :
-                          city.dryingScore >= 40 ? (isDark ? 'text-yellow-400' : 'text-amber-500') :
-                            (isDark ? 'text-red-400' : 'text-red-500')
+                        <div className={`text-sm font-bold uppercase tracking-wider ${loadingWeather ? 'opacity-30' :
+                          city.dryingScore >= 70 ? (isDark ? 'text-emerald-400' : 'text-emerald-500') :
+                            city.dryingScore >= 40 ? (isDark ? 'text-amber-400' : 'text-amber-500') :
+                              (isDark ? 'text-red-400' : 'text-red-500')
                           }`}>
-                          {loadingWeather ? "--" : city.dryingScore}
-                        </div>
-                        <div className={`text-[9px] font-bold uppercase tracking-wider ${isDark ? 'text-white/30' : 'text-sky-600/50'}`}>
-                          score
+                          {loadingWeather ? "Laden..." :
+                            city.dryingScore >= 70 ? jaVerdicts[vIndex] :
+                              city.dryingScore >= 40 ? misschienVerdicts[vIndex] :
+                                neeVerdicts[vIndex]}
                         </div>
                       </div>
-                    </div>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </div>
 
-                    {/* Weather icon */}
-                    <div className="absolute bottom-4 right-4 opacity-30 group-hover:opacity-60 transition-opacity duration-300">
-                      {!loadingWeather && <WeatherIcon type={getWeatherIcon(city.weatherCode, city.isDayTime)} />}
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
+          </motion.section>
+
+          {/* SEO Content Block */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="mt-40 max-w-4xl mx-auto"
+          >
+            <div className={`glass-card rounded-3xl p-6 sm:p-10 relative overflow-hidden ${isDark ? 'border-white/5' : 'border-sky-200/50'}`}>
+              {/* Background gradient */}
+              <div className={`absolute inset-0 opacity-10 ${isDark ? 'bg-gradient-to-br from-cyan-500 via-transparent to-emerald-500' : 'bg-gradient-to-br from-sky-400 via-transparent to-amber-400'}`} />
+
+              <div className="relative z-10">
+                <h2 className={`text-2xl sm:text-3xl font-black mb-6 tracking-tight text-center ${isDark ? 'text-white' : 'text-sky-950'}`}>
+                  Hoe werkt de wasdroogvoorspeller?
+                </h2>
+
+                <div className={`space-y-6 leading-relaxed ${isDark ? 'text-white/70' : 'text-sky-900/80'}`}>
+                  <p>
+                    Twijfel je of de was vandaag naar buiten kan? Onze slimme <strong>wasdroogvoorspeller</strong> berekent real-time of het weer geschikt is om je kleding in de frisse lucht te laten drogen. Wij analyseren niet alleen of het regent, maar kijken naar de complete droogomstandigheden.
+                  </p>
+
+                  <h3 className={`text-lg font-bold mt-8 mb-4 ${isDark ? 'text-white' : 'text-sky-900'}`}>De formule</h3>
+                  <p>
+                    Onze unieke <strong>Droogscore (0-100%)</strong> combineert vier essentiële meteorologische factoren die bepalen hoe snel vocht uit textiel verdampt:
+                  </p>
+
+                  <ul className="grid sm:grid-cols-2 gap-4 mt-6">
+                    <li className={`flex items-start gap-4 p-5 rounded-2xl ${isDark ? 'bg-white/5 hover:bg-white/10' : 'bg-white/50 hover:bg-white/60'} transition-colors duration-300`}>
+                      <div className={`p-3 rounded-xl ${isDark ? 'bg-white/10' : 'bg-sky-100'} shrink-0`}>
+                        <ThermometerIcon className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <strong className={`block text-base font-bold mb-1 ${isDark ? 'text-white' : 'text-sky-950'}`}>Temperatuur</strong>
+                        <span className="text-xs sm:text-sm opacity-80 leading-relaxed">Warmte versnelt verdamping. Ideaal is 20°C+, maar ook met 15°C en zon kan het hard gaan.</span>
+                      </div>
+                    </li>
+                    <li className={`flex items-start gap-4 p-5 rounded-2xl ${isDark ? 'bg-white/5 hover:bg-white/10' : 'bg-white/50 hover:bg-white/60'} transition-colors duration-300`}>
+                      <div className={`p-3 rounded-xl ${isDark ? 'bg-white/10' : 'bg-sky-100'} shrink-0`}>
+                        <DropletIcon className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <strong className={`block text-base font-bold mb-1 ${isDark ? 'text-white' : 'text-sky-950'}`}>Luchtvochtigheid</strong>
+                        <span className="text-xs sm:text-sm opacity-80 leading-relaxed">De belangrijkste factor. Boven de 80% droogt was nauwelijks, zelfs als het warm is.</span>
+                      </div>
+                    </li>
+                    <li className={`flex items-start gap-4 p-5 rounded-2xl ${isDark ? 'bg-white/5 hover:bg-white/10' : 'bg-white/50 hover:bg-white/60'} transition-colors duration-300`}>
+                      <div className={`p-3 rounded-xl ${isDark ? 'bg-white/10' : 'bg-sky-100'} shrink-0`}>
+                        <WindIcon className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <strong className={`block text-base font-bold mb-1 ${isDark ? 'text-white' : 'text-sky-950'}`}>Windkracht</strong>
+                        <span className="text-xs sm:text-sm opacity-80 leading-relaxed">Wind blaast het vochtlaagje rond je was weg. Een briesje doet wonderen voor de droogtijd.</span>
+                      </div>
+                    </li>
+                    <li className={`flex items-start gap-4 p-5 rounded-2xl ${isDark ? 'bg-white/5 hover:bg-white/10' : 'bg-white/50 hover:bg-white/60'} transition-colors duration-300`}>
+                      <div className={`p-3 rounded-xl ${isDark ? 'bg-white/10' : 'bg-sky-100'} shrink-0`}>
+                        <AlertIcon className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <strong className={`block text-base font-bold mb-1 ${isDark ? 'text-white' : 'text-sky-950'}`}>Waarschijnlijkheid</strong>
+                        <span className="text-xs sm:text-sm opacity-80 leading-relaxed">Regen is natuurlijk een no-go. Wij checken de actuele buienradar per uur.</span>
+                      </div>
+                    </li>
+                  </ul>
+
+                  <h3 className={`text-lg font-bold mt-8 mb-2 ${isDark ? 'text-white' : 'text-sky-900'}`}>Waarom sommige dagen misleidend zijn</h3>
+                  <p>
+                    Soms schijnt de zon, maar is de luchtvochtigheid zo hoog dat je was klam blijft. Andersom kan een bewolkte dag met veel wind perfect zijn om je beddengoed droog te wapperen. <strong>DroogWeerVandaag.nl</strong> kijkt verder dan alleen de zon en geeft je een eerlijk advies per stad in Nederland.
+                  </p>
+
+                  <p className="text-sm italic opacity-60 mt-6">
+                    Check elke ochtend je lokale droogscore en bespaar energie door de droger uit te laten. Beter voor je kleding, beter voor het milieu, en beter voor je energierekening.
+                  </p>
+                </div>
+              </div>
             </div>
           </motion.section>
 
@@ -617,13 +667,13 @@ export default function Home() {
               <div className="flex items-center gap-4 shrink-0">
                 <button
                   onClick={() => setShowCookieBanner(false)}
-                  className={`text-[9px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity ${isDark ? 'text-white' : 'text-sky-800'}`}
+                  className={`text-[9px] font-bold uppercase tracking-widest opacity-30 hover:opacity-60 transition-opacity ${isDark ? 'text-white' : 'text-sky-800'}`}
                 >
                   Niet oké
                 </button>
                 <button
                   onClick={() => setShowCookieBanner(false)}
-                  className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all duration-300 ${isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-sky-100 hover:bg-sky-200 text-sky-800'}`}
+                  className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 transform hover:scale-105 active:scale-95 ${isDark ? 'bg-gradient-to-r from-cyan-500 to-emerald-500 text-white shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40' : 'bg-gradient-to-r from-amber-400 to-amber-500 text-white shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40'}`}
                 >
                   Oké
                 </button>
