@@ -6,57 +6,63 @@ export interface Product {
     shopUrl: string;
     category: 'JA' | 'NEE' | 'MISSCHIEN';
     shopName: 'Bol.com' | 'Coolblue';
+    whyThis: string;
 }
+
+/**
+ * Copy per verdict scenario.
+ * label = bold heading above the product card
+ * transition = one-liner that bridges verdict → product
+ */
+export const verdictCopy: Record<'JA' | 'MISSCHIEN' | 'NEE', { label: string; transition: string }> = {
+    JA: {
+        label: 'Goed. Dan kan dit ook.',
+        transition: 'Als je toch buiten hangt, doe het in één keer goed.',
+    },
+    MISSCHIEN: {
+        label: 'Plan B, zonder drama.',
+        transition: 'Het kan lukken. Het kan ook eindigen in klamme jeans.',
+    },
+    NEE: {
+        label: 'Binnendrogen. Dit helpt.',
+        transition: 'Buiten gaat het niet worden. Binnen kan je wel versnellen.',
+    },
+};
 
 export const products: Product[] = [
     {
         id: 'leifheit-droogmolen',
         name: 'Leifheit Droogmolen Linomatic',
-        description: 'Laat de Nederlandse wind het zware werk doen. Je was danst nog net niet de samba.',
+        description: 'Meer drooglengte, minder gehannes. Klapt zichzelf open.',
         imagePath: '/products/droogmolen.png',
         shopUrl: 'https://partner.bol.com/click/click?p=1&a=AFFILIATE_CODE',
         category: 'JA',
         shopName: 'Bol.com',
-    },
-    {
-        id: 'brabantia-wasrek',
-        name: 'Brabantia HangOn Wasrek',
-        description: 'Voor de zon-aanbidders onder de wasmanden. Stevig genoeg voor al je natte jeans.',
-        imagePath: '/products/wasrek-buiten.png',
-        shopUrl: 'https://www.coolblue.nl/share-product/123?utm_source=affiliate',
-        category: 'JA',
-        shopName: 'Coolblue',
+        whyThis: 'Meer droogruimte, minder \'waar hang ik dit nog\'.',
     },
     {
         id: 'samsung-warmtepomp-droger',
         name: 'Samsung Bespoke Droger',
-        description: 'Als de wolken winnen, win jij alsnog. Fluisterstil en extreem zuinig.',
+        description: 'Fluisterstil, extreem zuinig. Doet het werk als de lucht het niet doet.',
         imagePath: '/products/droger-samsung.png',
         shopUrl: 'https://www.coolblue.nl/share-product/456?utm_source=affiliate',
         category: 'NEE',
         shopName: 'Coolblue',
-    },
-    {
-        id: 'miele-tumble-dryer',
-        name: 'Miele T1 Droger',
-        description: 'De enige die vandaag harder werkt dan jij. Duitse degelijkheid voor een klamme dag.',
-        imagePath: '/products/droger-miele.png',
-        shopUrl: 'https://partner.bol.com/click/click?p=2&a=AFFILIATE_CODE',
-        category: 'NEE',
-        shopName: 'Bol.com',
+        whyThis: 'Dit is de goedkoopste manier om binnen te versnellen.',
     },
     {
         id: 'vileda-verwarmd-rek',
-        name: 'Vileda One-Click Verwarmd Wasrek',
-        description: 'De perfecte \'plan B\' voor onbesliste dagen. Een beetje hulp van de stekker.',
+        name: 'Vileda Verwarmd Wasrek',
+        description: 'Elektrisch droogrek. Sneller droog, zonder droogkastgedoe.',
         imagePath: '/products/wasrek-verwarmd.png',
         shopUrl: 'https://partner.bol.com/click/click?p=3&a=AFFILIATE_CODE',
         category: 'MISSCHIEN',
         shopName: 'Bol.com',
+        whyThis: 'Dit vangt de \'net niet\' dagen op.',
     },
 ];
 
-export function getRandomProduct(category: 'JA' | 'NEE' | 'MISSCHIEN'): Product {
+export function getProductForCategory(category: 'JA' | 'NEE' | 'MISSCHIEN'): Product {
     const filtered = products.filter(p => p.category === category);
-    return filtered[Math.floor(Math.random() * filtered.length)];
+    return filtered[0]; // One fixed product per category, no rotation
 }
