@@ -3,7 +3,7 @@
 import { useEffect, useState, use } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { fetchWeatherData, getWeatherDescription, getWeatherIcon, type WeatherData } from "@/lib/weather";
+import { fetchWeatherData, getWeatherDescription, getWeatherIcon, type WeatherData, type HourlyForecast } from "@/lib/weather";
 import { useTheme } from "@/lib/theme";
 import { Navbar } from "@/components/Navbar";
 import { getDryingVerdict, checkIfRaining } from "@/lib/drying-logic";
@@ -98,7 +98,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
   // Determine the next 12 hours from current time
   // We now fetch 48 hours of data (2 days), so we can safely slice the next 12 hours check day boundaries
   const now = new Date();
-  const upcomingHours = weather.hourly.filter((h: any) => {
+  const upcomingHours = weather.hourly.filter((h: HourlyForecast) => {
     const date = new Date(h.time);
     return date >= now;
   }).slice(0, 12);
@@ -225,7 +225,7 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
               <span className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-white/40' : 'text-sky-700/60'}`}>Komende 12 uur</span>
             </div>
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-3">
-              {upcomingHours.map((hour: any, i: number) => {
+              {upcomingHours.map((hour: HourlyForecast, i: number) => {
                 const time = new Date(hour.time);
                 const isNow = time.getHours() === currentHour;
 

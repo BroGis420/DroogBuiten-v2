@@ -6,11 +6,7 @@ import Link from "next/link";
 import { useTheme } from "@/lib/theme";
 import { ThemeToggle, ThemeToggleCompact } from "@/components/ThemeToggle";
 
-interface NavbarProps {
-    // No props needed currently
-}
-
-export function Navbar({ }: NavbarProps) {
+export function Navbar() {
     const { theme } = useTheme();
     const isDark = theme === "dark";
     const [menuOpen, setMenuOpen] = useState(false);

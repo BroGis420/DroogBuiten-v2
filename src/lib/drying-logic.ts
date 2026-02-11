@@ -3,6 +3,7 @@ export type DryingVerdict = {
     subtitle: string;
     color: string;
     icon: string; // 'check', 'warning', 'cross'
+    verdict: "JA" | "MISSCHIEN" | "NEE";
 };
 
 const sentences_YES = [
@@ -45,7 +46,8 @@ export function getDryingVerdict(score: number, isRaining: boolean): DryingVerdi
             title: "NEE",
             subtitle: sentence,
             color: "text-red-500",
-            icon: "cross"
+            icon: "cross",
+            verdict: "NEE"
         };
     }
 
@@ -55,7 +57,8 @@ export function getDryingVerdict(score: number, isRaining: boolean): DryingVerdi
             title: "JA!",
             subtitle: sentence,
             color: "text-emerald-500", // Green
-            icon: "check"
+            icon: "check",
+            verdict: "JA"
         };
     }
 
@@ -65,7 +68,8 @@ export function getDryingVerdict(score: number, isRaining: boolean): DryingVerdi
             title: "MISSCHIEN",
             subtitle: sentence,
             color: "text-amber-500", // Orange/Yellow
-            icon: "warning"
+            icon: "warning",
+            verdict: "MISSCHIEN"
         };
     }
 
@@ -75,7 +79,8 @@ export function getDryingVerdict(score: number, isRaining: boolean): DryingVerdi
         title: "NEE",
         subtitle: sentence,
         color: "text-red-500", // Red
-        icon: "cross"
+        icon: "cross",
+        verdict: "NEE"
     };
 }
 
