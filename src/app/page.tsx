@@ -332,7 +332,7 @@ export default function Home() {
 
 
             {/* Main headline - Compact */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tighter leading-tight mb-6 mx-auto whitespace-nowrap text-center">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tighter leading-tight mb-6 whitespace-nowrap text-center w-full">
               <span className={isDark ? 'text-white' : 'text-sky-950'}>Kan mijn was vandaag </span>
               <span className="animate-text-shimmer">buiten drogen?</span>
             </h1>
