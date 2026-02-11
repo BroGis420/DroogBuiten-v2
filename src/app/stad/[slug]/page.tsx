@@ -50,12 +50,12 @@ function DryingScoreGauge({ score, isDark }: { score: number; isDark: boolean })
   );
 }
 
-function WeatherIcon({ code, isDay }: { code: number; isDay: boolean }) {
+function WeatherIcon({ code, isDay, className = "w-16 h-16" }: { code: number; isDay: boolean; className?: string }) {
   const type = getWeatherIcon(code, isDay);
-  if (type === "sunny") return <svg className="w-16 h-16 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" /><g stroke="currentColor" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /></g></svg>;
-  if (type === "cloudy") return <svg className="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M4 14a4 4 0 014-4 4 4 0 013.5 2A3.5 3.5 0 0118 13.5a3.5 3.5 0 01-3.5 3.5H8a4 4 0 01-4-3z" /></svg>;
-  if (type === "rainy") return <svg className="w-16 h-16 text-blue-400" fill="currentColor" viewBox="0 0 24 24"><path d="M4 10a4 4 0 014-4 4 4 0 013.5 2A3.5 3.5 0 0118 9.5a3.5 3.5 0 01-3.5 3.5H8a4 4 0 01-4-3z" /><line x1="8" y1="15" x2="8" y2="19" stroke="currentColor" strokeWidth="2" /><line x1="12" y1="14" x2="12" y2="20" stroke="currentColor" strokeWidth="2" /></svg>;
-  return <svg className="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M4 14a4 4 0 014-4 4 4 0 013.5 2A3.5 3.5 0 0118 13.5a3.5 3.5 0 01-3.5 3.5H8a4 4 0 01-4-3z" /></svg>;
+  if (type === "sunny") return <svg className={`${className} text-yellow-400`} fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" /><g stroke="currentColor" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /></g></svg>;
+  if (type === "cloudy") return <svg className={`${className} text-gray-400`} fill="currentColor" viewBox="0 0 24 24"><path d="M4 14a4 4 0 014-4 4 4 0 013.5 2A3.5 3.5 0 0118 13.5a3.5 3.5 0 01-3.5 3.5H8a4 4 0 01-4-3z" /></svg>;
+  if (type === "rainy") return <svg className={`${className} text-blue-400`} fill="currentColor" viewBox="0 0 24 24"><path d="M4 10a4 4 0 014-4 4 4 0 013.5 2A3.5 3.5 0 0118 9.5a3.5 3.5 0 01-3.5 3.5H8a4 4 0 01-4-3z" /><line x1="8" y1="15" x2="8" y2="19" stroke="currentColor" strokeWidth="2" /><line x1="12" y1="14" x2="12" y2="20" stroke="currentColor" strokeWidth="2" /></svg>;
+  return <svg className={`${className} text-gray-400`} fill="currentColor" viewBox="0 0 24 24"><path d="M4 14a4 4 0 014-4 4 4 0 013.5 2A3.5 3.5 0 0118 13.5a3.5 3.5 0 01-3.5 3.5H8a4 4 0 01-4-3z" /></svg>;
 }
 
 export default function CityPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -136,28 +136,32 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
                   {verdict.subtitle}
                 </motion.p>
 
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5 }}
-                  className={`inline-flex items-center gap-3 px-6 py-3 rounded-full ${isDark ? 'bg-white/5 border border-white/10' : 'bg-white/60 border border-sky-100'} backdrop-blur-md`}
-                >
-                  <span className={`text-lg font-bold ${isDark ? 'text-white' : 'text-sky-900'}`}>{weather.city}</span>
-                  <span className={isDark ? 'text-white/20' : 'text-sky-300'}>|</span>
-                  <div className={`flex items-center gap-2 ${isDark ? 'text-white/70' : 'text-sky-700'}`}>
-                    <WeatherIcon code={weather.current.weatherCode} isDay={weather.current.isDayTime} />
-                    <span className="font-medium">{getWeatherDescription(weather.current.weatherCode)}</span>
-                  </div>
-                </motion.div>
               </>
             )}
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="glass-card rounded-3xl p-8 flex flex-col items-center">
-              <span className={`text-xs font-bold uppercase tracking-wider mb-6 ${isDark ? 'text-cyan-400' : 'text-sky-600'}`}>Droogscore</span>
-              <DryingScoreGauge score={weather.dryingScore} isDark={isDark} />
-            </motion.div>
+            <div className="flex flex-col gap-6 h-full">
+              {/* Tile 1: City & Weather */}
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
+                className="glass-card rounded-3xl p-6 flex flex-col items-center justify-center text-center relative overflow-hidden group shrink-0">
+                <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${isDark ? 'bg-gradient-to-br from-purple-500 to-indigo-500' : 'bg-gradient-to-br from-sky-400 to-indigo-400'}`} />
+
+                <h2 className={`text-3xl font-black tracking-tight mb-2 ${isDark ? 'text-white' : 'text-sky-950'}`}>{weather.city}</h2>
+
+                <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-base font-bold ${isDark ? 'bg-white/5 text-white/80' : 'bg-sky-50 text-sky-800'}`}>
+                  <WeatherIcon code={weather.current.weatherCode} isDay={weather.current.isDayTime} className="w-6 h-6" />
+                  <span>{getWeatherDescription(weather.current.weatherCode)}</span>
+                </div>
+              </motion.div>
+
+              {/* Tile 2: Droogscore */}
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.25 }}
+                className="glass-card rounded-3xl p-8 flex flex-col items-center justify-center flex-1">
+                <span className={`text-xs font-bold uppercase tracking-wider mb-6 ${isDark ? 'text-cyan-400' : 'text-sky-600'}`}>Droogscore</span>
+                <DryingScoreGauge score={weather.dryingScore} isDark={isDark} />
+              </motion.div>
+            </div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="lg:col-span-2 h-full">
               <div className="grid grid-cols-2 gap-4 h-full">
