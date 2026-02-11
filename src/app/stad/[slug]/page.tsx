@@ -7,6 +7,7 @@ import { fetchWeatherData, getWeatherDescription, getWeatherIcon, type WeatherDa
 import { useTheme } from "@/lib/theme";
 import { Navbar } from "@/components/Navbar";
 import { getDryingVerdict, checkIfRaining } from "@/lib/drying-logic";
+import { ProductSuggestion } from "@/components/ProductSuggestion";
 
 function DryingScoreGauge({ score, isDark }: { score: number; isDark: boolean }) {
   const getScoreColor = (s: number) => {
@@ -213,6 +214,10 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
               </div>
             </motion.div>
           </div>
+
+          {verdict && (
+            <ProductSuggestion category={verdict.verdict} />
+          )}
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
             <div className="flex items-center justify-between mb-6">
