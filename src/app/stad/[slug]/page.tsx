@@ -215,10 +215,6 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
             </motion.div>
           </div>
 
-          {verdict && (
-            <ProductSuggestion category={verdict.verdict} />
-          )}
-
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
             <div className="flex items-center justify-between mb-6">
               <h2 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-sky-950'}`}>Zal het de komende uren droog blijven?</h2>
@@ -276,6 +272,10 @@ export default function CityPage({ params }: { params: Promise<{ slug: string }>
               })}
             </div>
           </motion.div>
+
+          {verdict && (
+            <ProductSuggestion category={verdict.verdict} />
+          )}
         </div>
       </main>
     </div>
