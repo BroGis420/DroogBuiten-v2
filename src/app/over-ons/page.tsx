@@ -76,7 +76,7 @@ export default function OverOnsPage() {
               Omdat niemand van <span className="animate-text-shimmer">klamme handdoeken</span> houdt
             </h1>
             <p className={`text-xl max-w-2xl mx-auto leading-relaxed ${isDark ? 'text-white/60' : 'text-sky-800/70'}`}>
-              DroogWeerVandaag.nl is ontstaan uit een diepgewortelde obsessie met de Nederlandse wind en een gezonde hekel aan was die maar niet droog wordt.
+              kanmijnwasbuiten.nl is ontstaan uit een diepgewortelde obsessie met de Nederlandse wind en een gezonde hekel aan was die maar niet droog wordt.
             </p>
           </motion.div>
 
@@ -123,7 +123,7 @@ export default function OverOnsPage() {
               </div>
               <h3 className={`text-xl font-black mb-4 ${isDark ? 'text-white' : 'text-sky-900'}`}>100% Hollands</h3>
               <p className={`text-sm leading-relaxed ${isDark ? 'text-white/60' : 'text-sky-800/70'}`}>
-                Gemaakt door voor mensen die weten dat 5 minuten zon in Nederland geen garantie is voor een droge middag. We dekken alle Nederlandse gemeenten en steden, van de grootste metropool tot het kleinste dorp.
+                Gemaakt door en voor mensen die weten dat 5 minuten zon in Nederland geen garantie is voor een droge middag. We dekken alle Nederlandse gemeenten en steden, van de grootste metropool tot het kleinste dorp.
               </p>
             </motion.div>
           </div>
@@ -137,7 +137,7 @@ export default function OverOnsPage() {
           >
             <h4 className={`text-sm font-black uppercase tracking-[0.2em] mb-4 ${isDark ? 'text-cyan-400' : 'text-sky-600'}`}>Geen geheimen tussen ons</h4>
             <p className={`text-sm leading-relaxed ${isDark ? 'text-white/50' : 'text-sky-800/60'}`}>
-              Laten we eerlijk zijn: wij zijn geen weergoden (helaas). De voorspellingen die je hier ziet komen van de slimme koppen bij <a href="https://open-meteo.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-sky-400 transition-colors">Open-Meteo</a>. Wij combineren hun rauwe data met onze eigen droog-algoritmes, zodat we ons kunnen focussen op wat écht belangrijk is: jouw was.
+              Laten we eerlijk zijn: wij zijn geen weergoden (helaas). De voorspellingen die je hier ziet komen van de slimme koppen bij <a href="https://open-meteo.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-sky-400 transition-colors">Open-Meteo</a>. Wij combineren hun rauwe data met onze eigen droog-algoritmes, zodat we ons kunnen focussen op wat écht belangrijk is: jouw was. Omdat servers en de passie voor droge handdoeken helaas niet gratis zijn, gebruiken we soms affiliate links. Als je via onze tips iets koopt, krijgen wij een kleine bijdrage van de winkel. Het kost jou niks extra, maar je helpt ons enorm om deze site in de lucht te houden. Dankjewel voor de support!
             </p>
           </motion.div>
 

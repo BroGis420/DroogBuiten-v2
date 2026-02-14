@@ -1,13 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { getIndoorProducts } from "@/lib/products";
+import { Product } from "@/lib/products";
 import { useTheme } from "@/lib/theme";
 
-export function IndoorSolutions() {
+interface AffiliateGridProps {
+    products: Product[];
+    title: string;
+}
+
+export function AffiliateGrid({ products, title }: AffiliateGridProps) {
     const { theme } = useTheme();
     const isDark = theme === "dark";
-    const products = getIndoorProducts();
 
     return (
         <motion.div
@@ -17,7 +21,7 @@ export function IndoorSolutions() {
             className="mt-16 mb-12 max-w-4xl mx-auto"
         >
             <h2 className={`text-2xl sm:text-3xl font-black tracking-tight text-center mb-8 ${isDark ? 'text-white' : 'text-sky-950'}`}>
-                Oké, dan wordt het binnen. Dit helpt:
+                {title}
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

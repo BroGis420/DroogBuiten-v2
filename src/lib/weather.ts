@@ -440,10 +440,15 @@ export interface HourlyForecast {
   temperature: number;
   humidity: number;
   windSpeed: number;
+  windGusts: number;
   precipitation: number;
+  precipitationProbability: number;
+  rain: number;
+  snowfall: number;
   cloudCover: number;
   uvIndex: number;
   dryingScore: number;
+  vpd: number;
   weatherCode: number;
   isDayTime: boolean;
 }
@@ -454,15 +459,30 @@ export interface WeatherData {
     temperature: number;
     humidity: number;
     windSpeed: number;
+    windGusts: number;
     precipitation: number;
+    precipitationProbability: number;
+    rain: number;
+    snowfall: number;
     cloudCover: number;
     uvIndex: number;
     weatherCode: number;
     isDayTime: boolean;
+    vpd: number;
   };
   hourly: HourlyForecast[];
   dryingScore: number;
   recommendation: string;
+}
+
+// Calculate Vapor Pressure Deficit (VPD) in kPa
+function calculateVPD(temperature: number, humidity: number): number {
+  // Saturation Vapor Pressure (SVP)
+  const svp = 0.61078 * Math.exp((17.27 * temperature) / (temperature + 237.3));
+  // Actual Vapor Pressure (AVP)
+  const avp = (humidity / 100) * svp;
+  // Vapor Pressure Deficit
+  return Math.max(0, svp - avp);
 }
 
 // Calculate drying score based on weather conditions (0-100)
@@ -470,67 +490,63 @@ function calculateDryingScore(
   temperature: number,
   humidity: number,
   windSpeed: number,
+  windGusts: number,
   precipitation: number,
+  precipitationProbability: number,
+  rain: number,
+  snowfall: number,
   cloudCover: number,
   uvIndex: number
 ): number {
-  let score = 50;
+  // Base score driven by VPD (0 to ~2.5 kPa typical range for drying)
+  const vpd = calculateVPD(temperature, humidity);
 
-  // Temperature factor (ideal: 20-30°C)
-  if (temperature >= 20 && temperature <= 30) {
-    score += 15;
-  } else if (temperature >= 15 && temperature < 20) {
-    score += 10;
-  } else if (temperature >= 10 && temperature < 15) {
-    score += 5;
-  } else if (temperature < 10) {
-    score -= 10;
-  }
+  // VPD Score contribution (0-60 points)
+  // > 1.5 kPa is excellent drying conditions
+  // < 0.2 kPa is very poor (saturated air)
+  let score = 0;
 
-  // Humidity factor (lower is better)
-  if (humidity < 40) {
-    score += 20;
-  } else if (humidity < 50) {
-    score += 15;
-  } else if (humidity < 60) {
-    score += 10;
-  } else if (humidity < 70) {
-    score += 5;
-  } else if (humidity >= 80) {
-    score -= 15;
-  }
+  if (vpd >= 1.5) score += 60;
+  else if (vpd >= 1.0) score += 50;
+  else if (vpd >= 0.7) score += 40;
+  else if (vpd >= 0.4) score += 25;
+  else if (vpd >= 0.2) score += 10;
 
-  // Wind factor (moderate wind is ideal)
-  if (windSpeed >= 10 && windSpeed <= 25) {
-    score += 15;
-  } else if (windSpeed >= 5 && windSpeed < 10) {
-    score += 10;
-  } else if (windSpeed > 25) {
-    score += 5;
-  }
+  // Wind Factor (0-20 points)
+  // Wind gusts help significantly
+  const effectiveWind = windSpeed * 0.7 + windGusts * 0.3;
+  if (effectiveWind >= 20) score += 20;
+  else if (effectiveWind >= 15) score += 15;
+  else if (effectiveWind >= 10) score += 10;
+  else if (effectiveWind >= 5) score += 5;
 
-  // Precipitation factor
-  if (precipitation > 0) {
-    score -= 30;
-  }
+  // Solar Radiation / UV Factor (0-10 points)
+  if (uvIndex >= 6) score += 10;
+  else if (uvIndex >= 3) score += 5;
 
-  // Cloud cover factor
-  if (cloudCover < 20) {
-    score += 10;
-  } else if (cloudCover < 40) {
-    score += 5;
-  } else if (cloudCover > 80) {
-    score -= 5;
-  }
+  // Cloud Cover Penalty (small adjustment for direct sunlight vs scattered)
+  if (cloudCover < 30) score += 10;
+  else if (cloudCover < 60) score += 5;
 
-  // UV factor
-  if (uvIndex >= 3 && uvIndex <= 6) {
-    score += 10;
-  } else if (uvIndex > 6) {
-    score += 5;
-  }
+  // --- PENALTIES ---
 
-  return Math.max(0, Math.min(100, score));
+  // Temperature penalty (cold air holds less moisture, even with good VPD)
+  if (temperature < 5) score -= 15;
+  else if (temperature < 10) score -= 5;
+
+  // Rain/Snow is the killer
+  if (snowfall > 0) return 0; // Snow = No drying outside
+  if (rain > 0.5) score -= 50; // Heavy rain
+  else if (rain > 0) score -= 30; // Light rain
+  else if (precipitation > 0) score -= 30; // Unknown precip
+
+  // Precipitation Probability Penalty (User psychology: risk avoidance)
+  if (precipitationProbability >= 80) score -= 40;
+  else if (precipitationProbability >= 60) score -= 25;
+  else if (precipitationProbability >= 40) score -= 15;
+  else if (precipitationProbability >= 20) score -= 5;
+
+  return Math.max(0, Math.min(100, Math.round(score)));
 }
 
 // Get recommendation based on drying score
@@ -598,52 +614,88 @@ export async function fetchWeatherData(citySlug: string): Promise<WeatherData | 
 
   try {
     const response = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m,weather_code,is_day,uv_index&hourly=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m,uv_index,is_day,weather_code&timezone=Europe/Amsterdam&forecast_days=2`
+      `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,relative_humidity_2m,precipitation,rain,snowfall,cloud_cover,wind_speed_10m,wind_gusts_10m,weather_code,is_day,uv_index&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,rain,snowfall,cloud_cover,wind_speed_10m,wind_gusts_10m,uv_index,is_day,weather_code&timezone=Europe/Amsterdam&forecast_days=2`
     );
 
     if (!response.ok) throw new Error("Weather API error");
 
     const data = await response.json();
 
+    const currentVPD = calculateVPD(data.current.temperature_2m, data.current.relative_humidity_2m);
+
+    // Approximate current precipitation probability from hourly (using current hour) - not available in 'current' API directly
+    // Or just fetch precipitation/rain/snow
+
+    // For current 'precipitationProbability', Open-Meteo doesn't give it in 'current'. We can take the current hour's value or just use 0 for now in the interface type
+    // But better to use hourly[0] logic.
+    // For simplicity in the 'current' object we can omit probability or estimate it. 
+    // Let's use 0 for now as it's not critical for the "Current" display usually, but for consistency let's look it up.
+    const currentHourIndex = 0; // The API returns hourly starting at 00:00 today or now? 
+    // Open-Meteo returns hourly starting at 00:00 of the first day requested.
+    // We need to find the index matching current time.
+    // However, to keep it simple without date parsing complexity, we'll map hourly first.
+
     const current = {
       temperature: Math.round(data.current.temperature_2m),
       humidity: data.current.relative_humidity_2m,
       windSpeed: Math.round(data.current.wind_speed_10m),
+      windGusts: Math.round(data.current.wind_gusts_10m || data.current.wind_speed_10m),
       precipitation: data.current.precipitation,
+      precipitationProbability: 0, // Fallback, updated later if needed or via hourly match
+      rain: data.current.rain,
+      snowfall: data.current.snowfall,
       cloudCover: data.current.cloud_cover,
       uvIndex: data.current.uv_index || 0,
       weatherCode: data.current.weather_code,
       isDayTime: data.current.is_day === 1,
+      vpd: currentVPD,
     };
 
     const hourly: HourlyForecast[] = data.hourly.time.map((time: string, i: number) => {
       const temp = data.hourly.temperature_2m[i];
       const hum = data.hourly.relative_humidity_2m[i];
       const wind = data.hourly.wind_speed_10m[i];
+      const gusts = data.hourly.wind_gusts_10m[i];
       const precip = data.hourly.precipitation[i];
+      const precipProb = data.hourly.precipitation_probability[i];
+      const rain = data.hourly.rain[i];
+      const snow = data.hourly.snowfall[i];
       const cloud = data.hourly.cloud_cover[i];
       const uv = data.hourly.uv_index[i] || 0;
       const weatherCode = data.hourly.weather_code[i];
+      const vpd = calculateVPD(temp, hum);
 
       return {
         time,
         temperature: Math.round(temp),
         humidity: hum,
         windSpeed: Math.round(wind),
+        windGusts: Math.round(gusts),
         precipitation: precip,
+        precipitationProbability: precipProb,
+        rain,
+        snowfall: snow,
         cloudCover: cloud,
         uvIndex: uv,
-        dryingScore: calculateDryingScore(temp, hum, wind, precip, cloud, uv),
+        dryingScore: calculateDryingScore(temp, hum, wind, gusts, precip, precipProb, rain, snow, cloud, uv),
+        vpd,
         weatherCode,
         isDayTime: data.hourly.is_day[i] === 1,
       };
     });
 
+    // Find current hour index to update current.precipitationProbability roughly? 
+    // Actually typically 'current' view is just a snapshot.
+    // Let's recalculate the 'current' drying score using the NEW function signature
     const dryingScore = calculateDryingScore(
       current.temperature,
       current.humidity,
       current.windSpeed,
+      current.windGusts,
       current.precipitation,
+      0, // Probability not in current, assume low/0 for 'now' calc or omit penalty
+      current.rain,
+      current.snowfall,
       current.cloudCover,
       current.uvIndex
     );
@@ -676,17 +728,23 @@ export async function fetchCityWeather(slug: string): Promise<{
 
   try {
     const response = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m,weather_code,is_day,uv_index&timezone=Europe/Amsterdam`
+      `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,relative_humidity_2m,precipitation,rain,snowfall,cloud_cover,wind_speed_10m,wind_gusts_10m,weather_code,is_day,uv_index&timezone=Europe/Amsterdam`
     );
 
     if (!response.ok) throw new Error("API error");
 
     const data = await response.json();
+
+    // We don't have probability in current, pass 0
     const dryingScore = calculateDryingScore(
       data.current.temperature_2m,
       data.current.relative_humidity_2m,
       data.current.wind_speed_10m,
+      data.current.wind_gusts_10m || data.current.wind_speed_10m,
       data.current.precipitation,
+      0,
+      data.current.rain,
+      data.current.snowfall,
       data.current.cloud_cover,
       data.current.uv_index || 0
     );

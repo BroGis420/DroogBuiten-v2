@@ -84,13 +84,23 @@ export function getDryingVerdict(score: number, isRaining: boolean): DryingVerdi
     };
 }
 
-export function checkIfRaining(code: number): boolean {
+export function checkIfPrecipitating(code: number): boolean {
     // WMO Weather interpretation codes (WW)
     // 51, 53, 55: Drizzle
     // 61, 63, 65: Rain
     // 66, 67: Freezing Rain
+    // 71, 73, 75, 77: Snow
     // 80, 81, 82: Rain showers
+    // 85, 86: Snow showers
     // 95, 96, 99: Thunderstorm
-    const rainCodes = [51, 53, 55, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99];
-    return rainCodes.includes(code);
+    const precipCodes = [
+        51, 53, 55, // Drizzle
+        61, 63, 65, // Rain
+        66, 67,     // Freezing Rain
+        71, 73, 75, 77, // Snow
+        80, 81, 82, // Rain showers
+        85, 86,     // Snow showers
+        95, 96, 99  // Thunderstorm
+    ];
+    return precipCodes.includes(code);
 }

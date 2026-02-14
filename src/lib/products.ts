@@ -30,29 +30,17 @@ export const verdictCopy: Record<'JA' | 'MISSCHIEN' | 'NEE', { label: string; tr
 };
 
 export const products: Product[] = [
-    // 1️⃣ Elektrisch droogrek (primair bij TWIJFEL / NEE) -> Scenario: TWIJFEL / NEE
-    {
-        id: 'eleganca-elektrisch-droogrek',
-        name: 'Elektrisch droogrek',
-        description: 'Verwarmd de stangen. Droogt je was sneller dan gewoon ophangen, zonder dat het krimp.',
-        imagePath: '/products/wasrek-verwarmd.png', // Using existing placeholder
-        shopUrl: 'https://partner.bol.com/click/click?p=2&t=url&s=1503974&f=TXL&url=https%3A%2F%2Fwww.bol.com%2Fnl%2Fnl%2Fp%2Feleganca-elektrisch-droogrek-147-x-54-x-94-cm-verwarmd-wasrek-elektrisch-220-240v-230w-ipx1-zilver%2F9300000226680542%2F&name=Elektrisch%20Droogrek&subid=Elektrisch%20Droogrek',
-        category: 'MISSCHIEN', // Primary scenario
-        shopName: 'Bol.com',
-        whyThis: 'Warmte helpt gewoon. Zeker opdagen dat het net niet wil.',
-    },
-    // 2️⃣ Draagbare elektrische mini-droger -> Scenario: NEE (alternatief)
+    // --- NEE Categorie (Indoor / Elektrisch) ---
     {
         id: 'draagbare-elektrische-droger',
         name: 'Draagbare droger',
         description: 'Een tentje waar je kleren in hangt met warme lucht. Klinkt gek, werkt best goed.',
-        imagePath: '/products/droger-samsung.png', // Placeholder (needs better image ideally)
+        imagePath: '/products/droger-samsung.png', // Placeholder
         shopUrl: 'https://partner.bol.com/click/click?p=2&t=url&s=1503974&f=TXL&url=https%3A%2F%2Fwww.bol.com%2Fnl%2Fnl%2Fp%2Fdraagbare-elektrische-droger-opvouwbare-droger-uv-sterilisator-8-uurs-timer-360-hetelucht-mini-droger-verstelbaar-ideaal-voor-thuis-op-reis-in-de-camper-en-in-compacte-wasruimtes%2F9300000241654694%2F&name=Draagbare%20elektrische%20droger&subid=Draagbare%20elektrische%20droger',
         category: 'NEE',
         shopName: 'Bol.com',
         whyThis: 'Als je klein woont en toch snel droge kleren wil.',
     },
-    // 3️⃣ Plafonddroogrek (premium binnenoplossing) -> Scenario: NEE (premium alternatief)
     {
         id: 'foxydry-air-120',
         name: 'Plafonddroogrek',
@@ -63,7 +51,6 @@ export const products: Product[] = [
         shopName: 'Bol.com',
         whyThis: 'Je vloer blijft vrij. Dat is de grootste winst.',
     },
-    // 4️⃣ Compacte elektrische wasdroger -> Scenario: NEE (alternatief)
     {
         id: 'compacte-wasdroger-600w',
         name: 'Draagbare wasdroger',
@@ -74,23 +61,76 @@ export const products: Product[] = [
         shopName: 'Bol.com',
         whyThis: 'Voor als een echte droger niet past of te duur is.',
     },
-    // 5️⃣ Droogmolen (primair bij JA) -> Scenario: JA
+
+    // --- MISSCHIEN Categorie (Handige tools) ---
     {
-        id: 'leifheit-droogmolen',
-        name: 'Leifheit droogmolen',
-        description: 'Veel lijn, weinig gedoe. Klapt makkelijk in.',
-        imagePath: '/products/droogmolen.png', // Existing valid image
-        shopUrl: 'https://partner.bol.com/click/click?p=2&t=url&s=1503974&f=TXL&url=https%3A%2F%2Fwww.bol.com%2Fnl%2Fnl%2Fp%2Fleifheit-droogmolen-linomatic-500-easy-incl-bodemhuls-50-m-drooglengte-5-wasmachineladingen%2F9300000024958549%2F&name=Droogmolen&subid=Droogmolen',
+        id: 'sokkenmolen',
+        name: 'Sokkenmolen',
+        description: 'Geen gedoe meer met losse sokken. Klik ze vast en klaar.',
+        imagePath: '/products/droogmolen.png', // Placeholder
+        shopUrl: 'https://partner.bol.com/click/click?p=2&t=url&s=1503974&f=TXL&url=https%3A%2F%2Fwww.bol.com%2Fnl%2Fnl%2Fp%2F4-pack-socks-drying-mill-holder-rack-for-clothes-and-laundry-ideal-for-socks-and-underwear%2F9300000234256304%2F&name=Sokkenmolen&subid=Sokkenmolen',
+        category: 'MISSCHIEN',
+        shopName: 'Bol.com',
+        whyThis: 'Scheelt je de helft van de tijd met ophangen.',
+    },
+    {
+        id: 'droogballen',
+        name: 'Droogballen',
+        description: 'Versnelt het drogen (ook buiten in de wind) en maakt was zachter.',
+        imagePath: '/products/wasrek-verwarmd.png', // Placeholder
+        shopUrl: 'https://partner.bol.com/click/click?p=2&t=url&s=1503974&f=TXL&url=https%3A%2F%2Fwww.bol.com%2Fnl%2Fnl%2Fp%2Fhappy-laundry-duurzame-wollen-droger-ballen-drogerballen-dryer-balls-wasdroger-ballen-ballen-voor-snellere-droogtijd-drogerbollen-6-stuks%2F9200000108636346%2F&name=Droogballen&subid=Droogballen',
+        category: 'MISSCHIEN',
+        shopName: 'Bol.com',
+        whyThis: 'Kleine investering, groot verschil in droogtijd.',
+    },
+    {
+        id: 'flexlijn',
+        name: 'Flexlijn',
+        description: 'Uittrekbare waslijn. Hangt nooit in de weg als je hem niet gebruikt.',
+        imagePath: '/products/droogmolen.png', // Placeholder
+        shopUrl: 'https://partner.bol.com/click/click?p=2&t=url&s=1503974&f=TXL&url=https%3A%2F%2Fwww.bol.com%2Fnl%2Fnl%2Fp%2F2-stuks-waslijn-uittrekbaar-uittrekbare-waslijn-douchekledinglijn-voor-buiten-en-binnen-droogrek-wasrek-wasdraad-voor-binnen-en-buiten-2-8-m-rvs%2F9300000221628963%2F&name=Flexlijn&subid=Flexlijn',
+        category: 'MISSCHIEN',
+        shopName: 'Bol.com',
+        whyThis: 'Ideaal voor als het weer twijfelachtig is: snel weer binnen.',
+    },
+
+    // --- JA Categorie (Buiten drogen) ---
+    {
+        id: 'radiatorrek',
+        name: 'Radiatorrek',
+        description: 'Perfect voor dat kleine beetje was of als het buiten net te fris is.',
+        imagePath: '/products/wasrek-verwarmd.png', // Placeholder
+        shopUrl: 'https://partner.bol.com/click/click?p=2&t=url&s=1503974&f=TXL&url=https%3A%2F%2Fwww.bol.com%2Fnl%2Fnl%2Fp%2Fradiator-clothes-airer-drying-rack-for-balcony-hang-and-small-spaces-foldable%2F9300000234256298%2F&name=Radiatorrek&subid=Radiatorrek',
         category: 'JA',
         shopName: 'Bol.com',
-        whyThis: 'Buiten drogen is gratis. Dit maakt het makkelijk.',
+        whyThis: 'Ook handig voor aan het balkonhekje.',
+    },
+    {
+        id: 'tripodrek',
+        name: 'Tripodrek',
+        description: 'Staat stabiel, neemt weinig ruimte in en je kan veel kwijt.',
+        imagePath: '/products/droogmolen.png', // Placeholder
+        shopUrl: 'https://partner.bol.com/click/click?p=2&t=url&s=1503974&f=TXL&url=https%3A%2F%2Fwww.bol.com%2Fnl%2Fnl%2Fp%2Ftripod-drying-rack-for-clothes-portable-and-foldable-space-saving-clothes-drying-rack-with-16-wooden-bars%2F9300000234256267%2F&name=Tripodrek&subid=Tripodrek',
+        category: 'JA',
+        shopName: 'Bol.com',
+        whyThis: 'Voor wie geen vaste droogmolen in de tuin wil rammen.',
+    },
+    {
+        id: 'zweefnet',
+        name: 'Zweefnet',
+        description: 'Voor je delicate truitjes die niet mogen uitlubberen.',
+        imagePath: '/products/wasrek-verwarmd.png', // Placeholder
+        shopUrl: 'https://partner.bol.com/click/click?p=2&t=url&s=1503974&f=TXL&url=https%3A%2F%2Fwww.bol.com%2Fnl%2Fnl%2Fp%2Fhanging-drying-net-windproof-clothes-basket-foldable-2-layers-drying-net-portable-multifunctional-drying-net-voor-het-drogen-van-kruiden-bloemen-paddenstoelen-en-planten%2F9300000241662942%2F&name=Zweefnet&subid=Zweefnet',
+        category: 'JA',
+        shopName: 'Bol.com',
+        whyThis: 'Plat drogen is het nieuwe ophangen.',
     },
 ];
 
 export function getProductForCategory(category: 'JA' | 'NEE' | 'MISSCHIEN'): Product {
     const filtered = products.filter(p => p.category === category);
     if (filtered.length === 0) {
-        // Fallback if no product found (should not happen with current data)
+        // Fallback should not happen, but safe to return a random one
         return products[0];
     }
     // Pick a random product from the filtered list
@@ -98,8 +138,10 @@ export function getProductForCategory(category: 'JA' | 'NEE' | 'MISSCHIEN'): Pro
     return filtered[randomIndex];
 }
 
+export function getProductsForCategory(category: 'JA' | 'NEE' | 'MISSCHIEN'): Product[] {
+    return products.filter(p => p.category === category);
+}
+
 export function getIndoorProducts(): Product[] {
-    const indoorIds = ['eleganca-elektrisch-droogrek', 'foxydry-air-120', 'compacte-wasdroger-600w'];
-    // Return them in the specific order requested
-    return indoorIds.map(id => products.find(p => p.id === id)).filter((p): p is Product => p !== undefined);
+    return getProductsForCategory('NEE');
 }

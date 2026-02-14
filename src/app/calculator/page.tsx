@@ -68,6 +68,15 @@ const temperatures = [
   { id: "hot", name: "Heet (>25°C)", multiplier: 0.6 },
 ];
 
+/**
+ * Non-linear drying slowdown due to shared humid boundary layer between garments
+ */
+function computeQuantityFactor(quantity: number): number {
+  const q = Math.max(1, quantity);
+  const factor = 1 + 0.55 * (1 - Math.exp(-0.35 * (q - 1)));
+  return Math.max(1, Math.min(1.65, factor));
+}
+
 function CalculatorContent() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
@@ -89,7 +98,7 @@ function CalculatorContent() {
       if (fabric && weather && temp) {
         const baseTime = fabric.baseDryTime;
         const adjustedTime = baseTime * weather.multiplier * temp.multiplier;
-        const quantityAdjusted = adjustedTime * (1 + (quantity - 1) * 0.15);
+        const quantityAdjusted = adjustedTime * computeQuantityFactor(quantity);
         setDryingTime(Math.round(quantityAdjusted));
       }
     }

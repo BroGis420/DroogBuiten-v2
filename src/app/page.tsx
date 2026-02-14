@@ -193,7 +193,7 @@ export default function Home() {
 
         localStorage.setItem('lastVisitedCity', nearestCity.slug);
         setLoadingGPS(false);
-        router.push(`/stad/${nearestCity.slug}`);
+        router.push(`/kan-de-was-buiten-hangen/${nearestCity.slug}`);
       },
       (error) => {
         setLoadingGPS(false);
@@ -267,7 +267,7 @@ export default function Home() {
     localStorage.setItem('lastVisitedCity', slug);
     setShowDropdown(false);
     setSearchValue("");
-    router.push(`/stad/${slug}`);
+    router.push(`/kan-de-was-buiten-hangen/${slug}`);
   };
 
   const handleSearch = () => {
@@ -321,7 +321,7 @@ export default function Home() {
 
       {/* Main Content - Reorganized for better UX */}
       <main className="relative z-10 pt-32 sm:pt-40 pb-20 px-6">
-        <div className="container mx-auto max-w-5xl">
+        <div className="container mx-auto max-w-7xl">
 
           {/* Hero Section - Compact & Focused */}
           <motion.section
@@ -465,7 +465,7 @@ export default function Home() {
                     transition={{ delay: 0.4 + index * 0.05 }}
                   >
                     <Link
-                      href={`/stad/${city.slug}`}
+                      href={`/kan-de-was-buiten-hangen/${city.slug}`}
                       className="group p-8 glass-card rounded-3xl text-center overflow-hidden relative block hover:scale-[1.02] transition-all duration-300"
                     >
                       {/* Hover gradient */}
@@ -562,7 +562,7 @@ export default function Home() {
 
                   <h3 className={`text-lg font-bold mt-8 mb-2 ${isDark ? 'text-white' : 'text-sky-900'}`}>Waarom sommige dagen misleidend zijn</h3>
                   <p>
-                    Soms schijnt de zon, maar is de luchtvochtigheid zo hoog dat je was klam blijft. Andersom kan een bewolkte dag met veel wind perfect zijn om je beddengoed droog te wapperen. <strong>DroogWeerVandaag.nl</strong> kijkt verder dan alleen de zon en geeft je een eerlijk advies per stad in Nederland.
+                    Soms schijnt de zon, maar is de luchtvochtigheid zo hoog dat je was klam blijft. Andersom kan een bewolkte dag met veel wind perfect zijn om je beddengoed droog te wapperen. <strong>kanmijnwasbuiten.nl</strong> kijkt verder dan alleen de zon en geeft je een eerlijk advies per stad in Nederland.
                   </p>
 
                   <p className="text-sm italic opacity-60 mt-6">
@@ -583,7 +583,7 @@ export default function Home() {
             {/* Brand */}
             <div className="md:col-span-4 space-y-4">
               <h3 className="text-xl font-black tracking-tighter">
-                <span className={isDark ? 'text-white' : 'text-sky-950'}>DroogWeerVandaag</span>
+                <span className={isDark ? 'text-white' : 'text-sky-950'}>kanmijnwasbuiten</span>
                 <span className="animate-text-shimmer">.nl</span>
               </h3>
               <p className={`text-xs font-medium uppercase tracking-widest leading-relaxed ${isDark ? 'text-white/40' : 'text-sky-800/60'}`}>
@@ -601,13 +601,13 @@ export default function Home() {
               <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${isDark ? 'text-cyan-400' : 'text-sky-600'}`}>Tools</span>
               <nav className="space-y-3">
                 <Link href="/" className={`block text-sm font-bold uppercase tracking-wider transition-colors duration-300 hover:translate-x-2 ${isDark ? 'text-white/50 hover:text-cyan-400' : 'text-sky-700/70 hover:text-sky-600'}`}>
-                  Droogvoorspelling
+                  Kan de was vandaag buiten?
                 </Link>
                 <Link href="/calculator" className={`block text-sm font-bold uppercase tracking-wider transition-colors duration-300 hover:translate-x-2 ${isDark ? 'text-white/50 hover:text-cyan-400' : 'text-sky-700/70 hover:text-sky-600'}`}>
-                  Droogtijd Calculator
+                  Hoe lang droogt mijn was?
                 </Link>
                 <Link href="/stoffen" className={`block text-sm font-bold uppercase tracking-wider transition-colors duration-300 hover:translate-x-2 ${isDark ? 'text-white/50 hover:text-cyan-400' : 'text-sky-700/70 hover:text-sky-600'}`}>
-                  Stoffen Gids
+                  Welke was droogt het snelst?
                 </Link>
               </nav>
             </div>
@@ -617,7 +617,7 @@ export default function Home() {
               <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${isDark ? 'text-cyan-400' : 'text-sky-600'}`}>Info</span>
               <nav className="space-y-3">
                 <Link href="/over-ons" className={`block text-sm font-bold uppercase tracking-wider transition-colors duration-300 hover:translate-x-2 ${isDark ? 'text-white/50 hover:text-cyan-400' : 'text-sky-700/70 hover:text-sky-600'}`}>
-                  Over Ons
+                  Hoe werkt dit?
                 </Link>
               </nav>
             </div>
@@ -639,7 +639,7 @@ export default function Home() {
           {/* Bottom bar */}
           <div className={`flex flex-col sm:flex-row items-center justify-between gap-4 pt-10 border-t ${isDark ? 'border-white/5' : 'border-sky-200/50'}`}>
             <p className={`text-[10px] font-bold uppercase tracking-[0.2em] ${isDark ? 'text-white/30' : 'text-sky-700/50'}`}>
-              © 2026 DroogWeerVandaag.nl
+              © 2026 kanmijnwasbuiten.nl
             </p>
             <div className="flex gap-6">
               <a href="#" className={`text-xs font-bold uppercase tracking-wider transition-colors duration-300 ${isDark ? 'text-white/30 hover:text-cyan-400' : 'text-sky-700/50 hover:text-sky-600'}`}>

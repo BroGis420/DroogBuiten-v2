@@ -3,15 +3,15 @@ import "./globals.css";
 import { ThemeProvider } from "@/lib/theme";
 
 export const metadata: Metadata = {
-  title: "Kan ik mijn was buiten drogen vandaag? | DroogWeerVandaag.nl",
+  title: "Kan ik mijn was buiten drogen vandaag? | kanmijnwasbuiten.nl",
   description: "Check direct of je was vandaag buiten kan drogen. Slimme droogscore per Nederlandse stad, gebaseerd op temperatuur, wind en luchtvochtigheid.",
 };
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "DroogWeerVandaag",
-  "url": "https://droogweervandaag.nl",
+  "name": "kanmijnwasbuiten.nl",
+  "url": "https://kanmijnwasbuiten.nl",
   "description": "Check direct of je was vandaag buiten kan drogen. Slimme droogscore per Nederlandse stad.",
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "Web",

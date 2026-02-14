@@ -40,7 +40,7 @@ export function Navbar() {
 
                         <Link href="/" className="text-xl sm:text-2xl font-black tracking-tighter group relative">
                             <span className={`absolute -inset-4 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${isDark ? 'bg-gradient-to-r from-cyan-500/20 to-emerald-500/20' : 'bg-gradient-to-r from-sky-400/20 to-amber-400/20'}`} />
-                            <span className={`relative transition-all duration-300 ${isDark ? 'text-white group-hover:text-cyan-400' : 'text-sky-900 group-hover:text-sky-600'}`}>DroogWeerVandaag</span>
+                            <span className={`relative transition-all duration-300 ${isDark ? 'text-white group-hover:text-cyan-400' : 'text-sky-900 group-hover:text-sky-600'}`}>kanmijnwasbuiten</span>
                             <span className="relative animate-text-shimmer">.nl</span>
                         </Link>
 
@@ -75,7 +75,7 @@ export function Navbar() {
                             <svg className="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
                                 <circle cx="12" cy="12" r="5" />
                             </svg>
-                            <span className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-sky-900'}`}>Droogvoorspelling</span>
+                            <span className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-sky-900'}`}>Kan de was vandaag buiten?</span>
                             <div className={`ml-auto w-2 h-2 rounded-full animate-pulse ${isDark ? 'bg-cyan-400' : 'bg-amber-500'}`} />
                         </Link>
                         <Link
@@ -87,7 +87,7 @@ export function Navbar() {
                                 <rect x="4" y="2" width="16" height="20" rx="2" strokeWidth="2" />
                                 <path d="M9 7h6M9 11h6M9 15h6" strokeWidth="2" />
                             </svg>
-                            <span className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-sky-900'}`}>Droogtijd Calculator</span>
+                            <span className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-sky-900'}`}>Hoe lang droogt mijn was?</span>
                         </Link>
                         <Link
                             href="/stoffen"
@@ -97,7 +97,7 @@ export function Navbar() {
                             <svg className={`w-6 h-6 ${isDark ? 'text-emerald-400' : 'text-sky-500'}`} fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M6 2L1 7l4 2v13h14V9l4-2-5-5h-4.5a2.5 2.5 0 01-5 0H6z" />
                             </svg>
-                            <span className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-sky-900'}`}>Stoffen Gids</span>
+                            <span className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-sky-900'}`}>Welke was droogt het snelst?</span>
                         </Link>
                         <Link
                             href="/over-ons"
@@ -107,7 +107,7 @@ export function Navbar() {
                             <svg className={`w-6 h-6 ${isDark ? 'text-purple-400' : 'text-sky-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-sky-900'}`}>Over Ons</span>
+                            <span className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-sky-900'}`}>Hoe werkt dit?</span>
                         </Link>
                     </nav>
 

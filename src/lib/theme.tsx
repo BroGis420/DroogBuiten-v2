@@ -12,8 +12,8 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: "dark",
-  toggleTheme: () => {},
-  setTheme: () => {},
+  toggleTheme: () => { },
+  setTheme: () => { },
 });
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
@@ -23,7 +23,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     setMounted(true);
     // Check localStorage for saved theme
-    const savedTheme = localStorage.getItem("droogbuiten-theme") as Theme | null;
+    const savedTheme = localStorage.getItem("kanmijnwasbuiten-theme") as Theme | null;
     if (savedTheme) {
       setThemeState(savedTheme);
       document.documentElement.classList.remove("dark", "light");
@@ -36,7 +36,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       // Update document class and localStorage
       document.documentElement.classList.remove("dark", "light");
       document.documentElement.classList.add(theme);
-      localStorage.setItem("droogbuiten-theme", theme);
+      localStorage.setItem("kanmijnwasbuiten-theme", theme);
     }
   }, [theme, mounted]);
 
