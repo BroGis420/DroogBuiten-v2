@@ -144,9 +144,18 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
                                         {verdict.title}
                                     </div>
                                 </motion.div>
-                                <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className={`text-xl sm:text-2xl font-bold max-w-3xl mx-auto leading-tight mb-8 ${isDark ? 'text-white/80' : 'text-sky-900/80'}`}>
-                                    {rotatingSentence}
-                                </motion.p>
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.3 }}
+                                    className={`max-w-2xl mx-auto p-12 rounded-[48px] border-2 transition-all duration-500 mb-8 relative group
+                                        ${isDark ? 'bg-white/5 border-cyan-500/30' : 'bg-white border-sky-100 shadow-2xl shadow-sky-100'}
+                                    `}
+                                >
+                                    <p className={`text-2xl sm:text-3xl font-black leading-tight italic ${isDark ? 'text-white' : 'text-sky-950'}`}>
+                                        "{rotatingSentence}"
+                                    </p>
+                                </motion.div>
                             </>
                         )}
                     </motion.div>
