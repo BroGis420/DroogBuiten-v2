@@ -388,11 +388,19 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
                     </motion.div>
 
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="text-center">
-                        <h3 className="text-lg font-black tracking-tight mb-6">Andere plekken om hoop te zoeken</h3>
-                        <div className="flex flex-wrap justify-center gap-3">
+                        <h2 className={`text-2xl font-black mb-10 ${isDark ? 'text-white' : 'text-sky-950'}`}>
+                            Andere plekken om hoop te zoeken
+                        </h2>
+                        <div className="flex flex-wrap justify-center gap-4">
                             {cityInfo.nearbyCities.map((city) => (
-                                <Link key={city.slug} href={`/kan-de-was-buiten-hangen/${city.slug}`} className={`px-6 py-3 rounded-2xl text-sm font-bold transition-all duration-300 ${isDark ? 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white hover:border-cyan-500/50' : 'bg-white border border-sky-100 text-sky-900/70 hover:bg-sky-50 hover:text-sky-600 hover:border-sky-300'}`}>
-                                    {city.name}
+                                <Link
+                                    key={city.slug}
+                                    href={`/kan-de-was-buiten-hangen/${city.slug}`}
+                                    className={`glass-card rounded-2xl p-6 min-w-[160px] flex flex-col items-center justify-center transition-all duration-300 opacity-80 hover:opacity-100 hover:scale-[1.02] border border-transparent ${isDark ? 'hover:border-cyan-500/30' : 'hover:border-sky-300 shadow-xl shadow-sky-500/5'}`}
+                                >
+                                    <span className={`text-sm font-black ${isDark ? 'text-white' : 'text-sky-950'}`}>
+                                        {city.name}
+                                    </span>
                                 </Link>
                             ))}
                         </div>
