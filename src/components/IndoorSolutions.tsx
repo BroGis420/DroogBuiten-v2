@@ -55,11 +55,6 @@ export const AffiliateGrid = ({ products, title, reasonIcon }: AffiliateGridProp
                     );
                 })}
             </div>
-
-            {/* Trust Marker */}
-            <p className={`text-center text-[9px] font-black uppercase tracking-[0.2em] opacity-40 mt-6 ${isDark ? 'text-white' : 'text-sky-950'}`}>
-                Dit heeft geen invloed op het weer, alleen op hoe snel je was droogt.
-            </p>
         </div>
     );
 };
