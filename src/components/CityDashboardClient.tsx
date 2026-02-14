@@ -235,7 +235,18 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
                             <div className={`h-px flex-1 ${isDark ? 'bg-white/5' : 'bg-sky-100'}`} />
                         </div>
 
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+                            {/* Droogscore Tile */}
+                            <div className="glass-card rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden group opacity-100 transition-opacity ring-2 ring-emerald-500/20">
+                                <div className={`text-[10px] font-bold uppercase tracking-wider mb-1 ${isDark ? 'text-white/40' : 'text-sky-700/40'}`}>Droogscore</div>
+                                <div className="flex items-center gap-1.5">
+                                    <svg className={`w-4 h-4 ${isDark ? 'text-emerald-400/60' : 'text-emerald-500/60'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.47a2 2 0 00-1.34-2.23z" />
+                                    </svg>
+                                    <div className={`text-xl font-black ${isDark ? 'text-white' : 'text-sky-950'}`}>{weather.dryingScore}/100</div>
+                                </div>
+                            </div>
+
                             {/* Temperature Tile */}
                             <div className="glass-card rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden group opacity-80 hover:opacity-100 transition-opacity">
                                 <div className={`text-[10px] font-bold uppercase tracking-wider mb-1 ${isDark ? 'text-white/40' : 'text-sky-700/40'}`}>Temp</div>
