@@ -73,16 +73,15 @@ function CollapsibleCard({ title, buttonText, children, isDark }: { title: strin
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className={`glass-card rounded-3xl p-6 transition-all duration-300 ${isOpen ? 'ring-2 ring-cyan-500/20' : ''}`}>
+        <div className={`glass-card rounded-3xl p-6 transition-all duration-300 ${isOpen ? 'ring-2 ring-cyan-500/20' : 'hover:bg-white/5 cursor-pointer'}`} onClick={() => setIsOpen(!isOpen)}>
             <div className="flex items-center justify-between mb-2">
                 <h3 className={`text-lg font-black tracking-tight ${isDark ? 'text-white' : 'text-sky-950'}`}>{title}</h3>
-                <button
-                    onClick={() => setIsOpen(!isOpen)}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${isDark ? 'bg-white/5 hover:bg-white/10 text-cyan-400' : 'bg-sky-50 hover:bg-sky-100 text-sky-600'
+                <div
+                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${isDark ? 'bg-white/5 text-cyan-400' : 'bg-sky-50 text-sky-600'
                         }`}
                 >
                     {isOpen ? "Sluiten" : buttonText}
-                </button>
+                </div>
             </div>
             <AnimatePresence>
                 {isOpen && (
