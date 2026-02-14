@@ -130,9 +130,9 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
 
             <Navbar />
 
-            <main className="relative z-10 pt-32 pb-20 px-6">
+            <main className="relative z-10 pt-40 pb-20 px-6">
                 <div className="container mx-auto max-w-7xl">
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-16 text-center">
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-24 text-center">
                         <h1 className={`text-sm font-bold uppercase tracking-[0.2em] mb-4 ${isDark ? 'text-white/40' : 'text-sky-800/40'}`}>
                             Kan ik vandaag de was buiten hangen in {cityInfo.name}?
                         </h1>
@@ -157,7 +157,7 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.4 }}
-                            className="mb-12"
+                            className="mb-24"
                         >
                             {(() => {
                                 // Situational reasoning logic
@@ -183,8 +183,8 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
 
                                 return (
                                     <div className="max-w-4xl mx-auto">
-                                        <div className="text-center mb-6">
-                                            <h2 className={`text-xl sm:text-2xl font-black mb-1 ${isDark ? 'text-white' : 'text-sky-950'}`}>
+                                        <div className="text-center mb-10">
+                                            <h2 className={`text-xl sm:text-2xl font-black mb-2 ${isDark ? 'text-white' : 'text-sky-950'}`}>
                                                 {situationalAdvice[verdict.verdict].headline}
                                             </h2>
                                             {situationalAdvice[verdict.verdict].context && (
@@ -217,9 +217,9 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.5 }}
-                        className="mb-16"
+                        className="mb-24"
                     >
-                        <div className="flex items-center justify-center gap-4 mb-6">
+                        <div className="flex items-center justify-center gap-4 mb-10">
                             <div className={`h-px flex-1 ${isDark ? 'bg-white/5' : 'bg-sky-100'}`} />
                             <span className={`text-[10px] font-black uppercase tracking-[0.2em] ${isDark ? 'text-white/20' : 'text-sky-700/30'}`}>
                                 De onderbouwing
@@ -279,7 +279,7 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.6 }}
-                        className={`mb-16 transition-all duration-700 ${verdict?.verdict === 'NEE' ? 'opacity-60 saturate-[0.8] grayscale-[0.2]' : ''}`}
+                        className={`mb-24 transition-all duration-700 ${verdict?.verdict === 'NEE' ? 'opacity-60 saturate-[0.8] grayscale-[0.2]' : ''}`}
                     >
                         <div className="text-center mb-10">
                             <h2 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-sky-950'}`}>

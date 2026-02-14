@@ -24,7 +24,7 @@ export const AffiliateGrid = ({ products, title, reasonIcon }: AffiliateGridProp
                 </h2>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 {products.map((product, index) => {
                     const isPrimary = index === 0;
                     return (
