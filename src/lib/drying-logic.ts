@@ -26,13 +26,7 @@ const sentences_MAYBE = [
 ];
 
 const sentences_NO = [
-    "Vergeet het maar, tenzij je van natte kleren houdt.",
-    "Niet doen. Gewoon niet doen.",
-    "Je wasrek blijft vandaag lekker binnen.",
-    "De natuur zegt nee, en de natuur wint altijd.",
-    "Gebruik de droger, of wacht op betere tijden.",
-    "Als je nu buiten hangt, wordt het alleen maar natter.",
-    "Bespaar jezelf de moeite van het naar buiten rennen."
+    "Door lage temperatuur en hoge luchtvochtigheid kan vocht vandaag nauwelijks uit stof verdampen."
 ];
 
 export function getDryingVerdict(score: number, isRaining: boolean): DryingVerdict {

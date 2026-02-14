@@ -5,7 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { getWeatherDescription, getWeatherIcon, type WeatherData, type HourlyForecast } from "@/lib/weather";
 import { getDryingVerdict, checkIfPrecipitating } from "@/lib/drying-logic";
-import { getProductsForCategory, verdictCopy } from "@/lib/products";
+import { getProductsForCategory, verdictCopy, situationalAdvice } from "@/lib/products";
 import { AffiliateGrid } from "@/components/IndoorSolutions";
 import { Navbar } from "@/components/Navbar";
 
@@ -145,96 +145,138 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
                         )}
                     </motion.div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
-                        <div className="flex flex-col gap-6 h-full">
-                            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="glass-card rounded-3xl p-6 flex flex-col items-center justify-center text-center relative overflow-hidden group">
-                                <h2 className={`text-3xl font-black tracking-tight mb-2 ${isDark ? 'text-white' : 'text-sky-950'}`}>{cityInfo.name}</h2>
-                                <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-base font-bold ${isDark ? 'bg-white/5 text-white/80' : 'bg-sky-50 text-sky-800'}`}>
-                                    <WeatherIcon code={weather.current.weatherCode} isDay={weather.current.isDayTime} className="w-6 h-6" />
-                                    <span>{getWeatherDescription(weather.current.weatherCode)}</span>
+                    {/* Primary Advice / Product Block */}
+                    {verdict && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.4 }}
+                            className="mb-12"
+                        >
+                            {verdict.verdict === 'JA' ? (
+                                <div className="text-center py-6 opacity-40">
+                                    <p className={`text-sm font-bold ${isDark ? 'text-white' : 'text-sky-950'}`}>
+                                        Vandaag heb je geen hulpmiddelen nodig.
+                                    </p>
                                 </div>
-                            </motion.div>
-                            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.25 }} className="glass-card rounded-3xl p-8 flex flex-col items-center justify-center flex-1">
-                                <DryingScoreGauge score={weather.dryingScore} isDark={isDark} />
-                            </motion.div>
+                            ) : (() => {
+                                // Situational reasoning logic
+                                const isRaining = weather.current.precipitation > 0;
+                                const isVeryCold = weather.current.temperature < 5;
+                                const isHumid = weather.current.humidity > 80;
+
+                                let reasonIcon = "";
+
+                                if (verdict.verdict === 'NEE' || verdict.verdict === 'MISSCHIEN') {
+                                    if (isRaining) {
+                                        reasonIcon = "🌧";
+                                    } else if (isVeryCold && isHumid) {
+                                        reasonIcon = "🌫";
+                                    } else if (isVeryCold) {
+                                        reasonIcon = "❄";
+                                    } else if (isHumid) {
+                                        reasonIcon = "🌫";
+                                    }
+                                }
+
+                                return (
+                                    <div className="max-w-4xl mx-auto">
+                                        <div className="text-center mb-6">
+                                            <h2 className={`text-xl sm:text-2xl font-black mb-1 ${isDark ? 'text-white' : 'text-sky-950'}`}>
+                                                {situationalAdvice[verdict.verdict].headline}
+                                            </h2>
+                                            {situationalAdvice[verdict.verdict].context && (
+                                                <p className={`text-sm font-bold opacity-60 ${isDark ? 'text-white' : 'text-sky-800'}`}>
+                                                    {situationalAdvice[verdict.verdict].context}
+                                                </p>
+                                            )}
+                                        </div>
+                                        <AffiliateGrid
+                                            products={getProductsForCategory(verdict.verdict)}
+                                            title=""
+                                            reasonIcon={reasonIcon}
+                                        />
+                                    </div>
+                                );
+                            })()}
+                        </motion.div>
+                    )}
+
+                    {/* Proof Section (Weather Tiles) - De-emphasized */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 }}
+                        className="mb-16"
+                    >
+                        <div className="flex items-center justify-center gap-4 mb-6">
+                            <div className={`h-px flex-1 ${isDark ? 'bg-white/5' : 'bg-sky-100'}`} />
+                            <span className={`text-[10px] font-black uppercase tracking-[0.2em] ${isDark ? 'text-white/20' : 'text-sky-700/30'}`}>
+                                De onderbouwing
+                            </span>
+                            <div className={`h-px flex-1 ${isDark ? 'bg-white/5' : 'bg-sky-100'}`} />
                         </div>
 
-                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="lg:col-span-2 h-full">
-                            <div className="grid grid-cols-2 gap-4 h-full">
-                                {/* Temperature Tile */}
-                                <div className="glass-card rounded-3xl p-6 flex flex-col items-center justify-center relative overflow-hidden group">
-                                    <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${isDark ? 'bg-gradient-to-br from-orange-400 to-red-500' : 'bg-gradient-to-br from-orange-300 to-red-400'}`} />
-                                    <div className={`text-sm font-bold uppercase tracking-wider mb-2 ${isDark ? 'text-white/60' : 'text-sky-700/60'}`}>Temperatuur</div>
-                                    <div className="flex items-center gap-2">
-                                        <svg className={`w-8 h-8 ${isDark ? 'text-orange-400' : 'text-orange-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z" />
-                                        </svg>
-                                        <div className={`text-4xl font-black ${isDark ? 'text-white' : 'text-sky-950'}`}>{weather.current.temperature}°</div>
-                                    </div>
-                                </div>
-
-                                {/* Humidity Tile */}
-                                <div className="glass-card rounded-3xl p-6 flex flex-col items-center justify-center relative overflow-hidden group">
-                                    <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${isDark ? 'bg-gradient-to-br from-cyan-400 to-blue-500' : 'bg-gradient-to-br from-cyan-300 to-blue-400'}`} />
-                                    <div className={`text-sm font-bold uppercase tracking-wider mb-2 ${isDark ? 'text-white/60' : 'text-sky-700/60'}`}>Vochtigheid</div>
-                                    <div className="flex items-center gap-2">
-                                        <svg className={`w-8 h-8 ${isDark ? 'text-cyan-400' : 'text-sky-500'}`} fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 2.5c-3.12 4.28-7 9.6-7 13.5 0 3.87 3.13 7 7 7s7-3.13 7-7c0-3.9-3.88-9.22-7-13.5z" />
-                                        </svg>
-                                        <div className={`text-4xl font-black ${isDark ? 'text-white' : 'text-sky-950'}`}>{weather.current.humidity}%</div>
-                                    </div>
-                                </div>
-
-                                {/* Wind Tile */}
-                                <div className="glass-card rounded-3xl p-6 flex flex-col items-center justify-center relative overflow-hidden group">
-                                    <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${isDark ? 'bg-gradient-to-br from-emerald-400 to-green-500' : 'bg-gradient-to-br from-emerald-300 to-green-400'}`} />
-                                    <div className={`text-sm font-bold uppercase tracking-wider mb-2 ${isDark ? 'text-white/60' : 'text-sky-700/60'}`}>Wind</div>
-                                    <div className="flex items-center gap-2">
-                                        <svg className={`w-8 h-8 ${isDark ? 'text-emerald-400' : 'text-emerald-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                                        </svg>
-                                        <div className={`text-4xl font-black ${isDark ? 'text-white' : 'text-sky-950'}`}>{weather.current.windSpeed}</div>
-                                        <span className={`text-sm font-bold mt-2 ${isDark ? 'text-white/40' : 'text-sky-900/40'}`}>km/u</span>
-                                    </div>
-                                </div>
-
-                                {/* UV Index Tile */}
-                                <div className="glass-card rounded-3xl p-6 flex flex-col items-center justify-center relative overflow-hidden group">
-                                    <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${isDark ? 'bg-gradient-to-br from-yellow-400 to-amber-500' : 'bg-gradient-to-br from-yellow-300 to-amber-400'}`} />
-                                    <div className={`text-sm font-bold uppercase tracking-wider mb-2 ${isDark ? 'text-white/60' : 'text-sky-700/60'}`}>UV Index</div>
-                                    <div className="flex items-center gap-2">
-                                        <svg className={`w-8 h-8 ${isDark ? 'text-yellow-400' : 'text-amber-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                                        </svg>
-                                        <div className={`text-4xl font-black ${isDark ? 'text-white' : 'text-sky-950'}`}>{weather.current.uvIndex}</div>
-                                    </div>
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            {/* Temperature Tile */}
+                            <div className="glass-card rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden group opacity-80 hover:opacity-100 transition-opacity">
+                                <div className={`text-[10px] font-bold uppercase tracking-wider mb-1 ${isDark ? 'text-white/40' : 'text-sky-700/40'}`}>Temp</div>
+                                <div className="flex items-center gap-1.5">
+                                    <svg className={`w-4 h-4 ${isDark ? 'text-orange-400/60' : 'text-orange-500/60'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z" />
+                                    </svg>
+                                    <div className={`text-xl font-black ${isDark ? 'text-white/80' : 'text-sky-950/80'}`}>{weather.current.temperature}°</div>
                                 </div>
                             </div>
-                        </motion.div>
-                    </div>
 
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mb-12">
-                        <CollapsibleCard title="Waarom deze score?" buttonText="Waarom doet het weer zo?" isDark={isDark}>
-                            {cityInfo.isCoastal ? (
-                                <>
-                                    <p className="mb-4">{cityInfo.name} ligt dicht bij de kust, wat betekent dat de zeewind een enorme bondgenoot is bij het drogen van je was. Wind is vaak effectiever dan pure zonkracht om vocht uit vezels te trekken.</p>
-                                    <p>Houd er echter rekening mee dat de luchtvochtigheid hier aan zee vaak hoger ligt. Dit spel tussen wind en water maakt dat je was soms sneller droogt op een bewolkte, winderige dag dan op een klamme, zonnige middag. Een typisch staaltje kust-logica.</p>
-                                </>
-                            ) : (
-                                <>
-                                    <p className="mb-4">In {cityInfo.name} zijn temperatuur en zonkracht vaak de belangrijkste motoren voor je was. Zonder de constante zeebries moet de warmte het zware werk doen om het vocht te laten verdampen.</p>
-                                    <p>Omdat de wind hier wat wisselvalliger kan zijn, is het slim om je was buiten te hangen zodra de zon doorbreekt. De droogscore houdt hier rekening met de balans tussen warmte en luchtverplaatsing, zodat je niet voor verrassingen komt te staan.</p>
-                                </>
-                            )}
-                        </CollapsibleCard>
+                            {/* Humidity Tile */}
+                            <div className="glass-card rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden group opacity-80 hover:opacity-100 transition-opacity">
+                                <div className={`text-[10px] font-bold uppercase tracking-wider mb-1 ${isDark ? 'text-white/40' : 'text-sky-700/40'}`}>Vocht</div>
+                                <div className="flex items-center gap-1.5">
+                                    <svg className={`w-4 h-4 ${isDark ? 'text-cyan-400/60' : 'text-sky-500/60'}`} fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2.5c-3.12 4.28-7 9.6-7 13.5 0 3.87 3.13 7 7 7s7-3.13 7-7c0-3.9-3.88-9.22-7-13.5z" />
+                                    </svg>
+                                    <div className={`text-xl font-black ${isDark ? 'text-white/80' : 'text-sky-950/80'}`}>{weather.current.humidity}%</div>
+                                </div>
+                            </div>
+
+                            {/* Wind Tile */}
+                            <div className="glass-card rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden group opacity-80 hover:opacity-100 transition-opacity">
+                                <div className={`text-[10px] font-bold uppercase tracking-wider mb-1 ${isDark ? 'text-white/40' : 'text-sky-700/40'}`}>Wind</div>
+                                <div className="flex items-center gap-1.5">
+                                    <svg className={`w-4 h-4 ${isDark ? 'text-emerald-400/60' : 'text-emerald-500/60'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                    </svg>
+                                    <div className={`text-xl font-black ${isDark ? 'text-white/80' : 'text-sky-950/80'}`}>{weather.current.windSpeed}</div>
+                                    <span className={`text-[10px] font-bold opacity-40`}>km/h</span>
+                                </div>
+                            </div>
+
+                            {/* UV Index Tile */}
+                            <div className="glass-card rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden group opacity-80 hover:opacity-100 transition-opacity">
+                                <div className={`text-[10px] font-bold uppercase tracking-wider mb-1 ${isDark ? 'text-white/40' : 'text-sky-700/40'}`}>UV</div>
+                                <div className="flex items-center gap-1.5">
+                                    <svg className={`w-4 h-4 ${isDark ? 'text-yellow-400/60' : 'text-amber-500/60'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    </svg>
+                                    <div className={`text-xl font-black ${isDark ? 'text-white/80' : 'text-sky-950/80'}`}>{weather.current.uvIndex}</div>
+                                </div>
+                            </div>
+                        </div>
                     </motion.div>
 
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6 }}
+                        className={`mb-16 transition-all duration-700 ${verdict?.verdict === 'NEE' ? 'opacity-60 saturate-[0.8] grayscale-[0.2]' : ''}`}
+                    >
                         <div className="text-center mb-10">
-                            <h2 className="text-2xl font-black">Blijft het zo?</h2>
-                            <span className="text-xs font-bold opacity-40">Komende 12 uur</span>
+                            <h2 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-sky-950'}`}>
+                                Blijft dit zo de komende 12 uur?
+                            </h2>
                         </div>
-                        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-3 mb-12">
+                        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-3">
                             {upcomingHours.map((hour, i) => {
                                 const time = new Date(hour.time);
                                 const isNow = time.getHours() === currentHour;
@@ -271,20 +313,20 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
                                 }
 
                                 return (
-                                    <motion.div key={hour.time} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 + i * 0.05 }}
-                                        className={`glass-card rounded-2xl p-3 text-center border-2 flex flex-col items-center justify-between ${statusColor} ${isNow ? 'scale-110 shadow-lg z-10' : ''}`}>
-                                        <p className={`text-sm font-medium mb-1 ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>
+                                    <motion.div key={hour.time} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.6 + i * 0.05 }}
+                                        className={`glass-card rounded-2xl p-3 text-center border flex flex-col items-center justify-between ${statusColor} ${isNow ? 'ring-2 ring-cyan-500/50 scale-105 z-10' : ''}`}>
+                                        <p className={`text-[10px] font-bold mb-1 ${isDark ? 'text-white/40' : 'text-sky-700/40'}`}>
                                             {new Date(hour.time).getHours()}:00
                                         </p>
-                                        <div className="flex justify-center my-2">
+                                        <div className="flex justify-center my-1.5">
                                             <img
                                                 src={`https://raw.githubusercontent.com/basmilius/weather-icons/master/production/fill/all/${getWeatherIcon(hour.weatherCode, hour.isDayTime)}.svg`}
                                                 alt={getWeatherDescription(hour.weatherCode)}
-                                                className={`w-10 h-10 ${!isDark ? 'brightness-[0.6] contrast-125 drop-shadow-sm' : ''}`}
+                                                className={`w-8 h-8 ${!isDark ? 'brightness-[0.6] contrast-125' : ''}`}
                                             />
                                         </div>
-                                        <p className={`text-lg font-bold mb-2 ${isDark ? 'text-white' : 'text-slate-800'}`}>{Math.round(hour.temperature)}°</p>
-                                        <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${statusTextColor} bg-white/10 border ${isDark ? 'border-white/10' : 'border-black/5'} w-full uppercase`}>
+                                        <p className={`text-sm font-black mb-1.5 ${isDark ? 'text-white' : 'text-sky-950'}`}>{Math.round(hour.temperature)}°</p>
+                                        <div className={`text-[9px] font-black px-1.5 py-0.5 rounded-full ${statusTextColor} bg-white/5 border ${isDark ? 'border-white/5' : 'border-black/5'} w-full uppercase`}>
                                             {statusLabel}
                                         </div>
                                     </motion.div>
@@ -293,14 +335,28 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
                         </div>
                     </motion.div>
 
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="mb-12">
-                        <CollapsibleCard title={`Wanneer hang je best buiten in ${cityInfo.name}?`} buttonText="Geef me het droogmoment" isDark={isDark}>
-                            <p className="mb-4">Timing is de sleutel tot succes. In de vroege ochtend is de luchtvochtigheid vaak nog hoog door opgetrokken dauw, waardoor je was urenlang stilhangt. Voor de beste resultaten raden we aan om rond het middaguur te beginnen.</p>
-                            <p>In de middag bereik je vaak het optimale punt waar temperatuur en wind het best samenwerken. Zodra de avond valt, stijgt de luchtvochtigheid weer snel. Check onze uurbalk hierboven om te zien wanneer de score in de &quot;Goed&quot; zone zit—dat is jouw moment om te stralen met die wasmand.</p>
-                        </CollapsibleCard>
-                    </motion.div>
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="mb-16">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <CollapsibleCard title="Waarom niet vandaag?" buttonText="Check het bewijs" isDark={isDark}>
+                                {cityInfo.isCoastal ? (
+                                    <>
+                                        <p className="mb-4">{cityInfo.name} ligt dicht bij de kust. De zeewind is een enorme bondgenoot: wind is vaak effectiever dan zonkracht om vocht uit vezels te trekken.</p>
+                                        <p>Maar let op: de luchtvochtigheid aan zee ligt vaak hoger. Dit spel tussen wind en water bepaalt je score vandaag.</p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <p className="mb-4">In {cityInfo.name} zijn temperatuur en zonkracht de motoren voor je was. Zonder constante zeebries moet de warmte het zware werk doen.</p>
+                                        <p>De droogscore berekent de balans tussen warmte en luchtverplaatsing in het binnenland.</p>
+                                    </>
+                                )}
+                            </CollapsibleCard>
 
-                    {verdict && <div className="mb-12"><AffiliateGrid products={getProductsForCategory(verdict.verdict)} title={`${verdictCopy[verdict.verdict].transition} Dit helpt:`} /></div>}
+                            <CollapsibleCard title="Wanneer wél?" buttonText="Check de timing" isDark={isDark}>
+                                <p className="mb-4">In {cityInfo.name} is de vroege ochtend vaak klam door dauw. Voor de beste resultaten raden we aan om rond het middaguur te beginnen.</p>
+                                <p>Check de uurbalk hierboven: zodra de score in de &quot;Goed&quot; zone zit, is dat jouw moment.</p>
+                            </CollapsibleCard>
+                        </div>
+                    </motion.div>
 
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="text-center">
                         <h3 className="text-lg font-black tracking-tight mb-6">Andere plekken om hoop te zoeken</h3>
