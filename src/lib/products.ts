@@ -23,17 +23,62 @@ export interface Product {
  */
 export const situationalAdvice: Record<'JA' | 'MISSCHIEN' | 'NEE', { context: string; headline: string }> = {
     JA: {
-        context: 'Optimale condities voor buiten drogen.',
+        context: '', // Now handled by rotating sentences
         headline: 'Status',
     },
     MISSCHIEN: {
-        context: 'Droogtijd buiten is onzeker; deze tools minimaliseren de risico\'s.',
+        context: '', // Now handled by rotating sentences
         headline: 'Wat helpt in deze omstandigheden',
     },
     NEE: {
         context: '',
         headline: 'Wat helpt in deze omstandigheden',
     },
+};
+
+export const verdictSentences: Record<'JA' | 'MISSCHIEN' | 'NEE', string[]> = {
+    JA: [
+        "De lucht heeft weer ruimte. Je was ook.",
+        "Vandaag neemt de lucht wél water aan.",
+        "Dit is waslijnweer.",
+        "Ophangen is genoeg vandaag.",
+        "Je was mag naar buiten zonder plan B.",
+        "Buiten is vandaag sneller dan binnen.",
+        "De lucht helpt een handje mee.",
+        "Dit droogt gewoon.",
+        "Vandaag werkt zwaartekracht én verdamping.",
+        "Je was wordt vandaag weer kleding.",
+        "De lucht doet het werk.",
+        "Dit is een open-raam-dag voor je was.",
+    ],
+    MISSCHIEN: [
+        "Het kan, maar alleen als je het moment pakt.",
+        "Net genoeg, mits je niet te laat bent.",
+        "Dit wordt drogen op afspraak.",
+        "De lucht twijfelt nog een beetje mee.",
+        "Kan lukken, kan klam blijven.",
+        "Vandaag beslist het uur, niet de dag.",
+        "Tussen twee buien door red je het.",
+        "Half droog is haalbaar.",
+        "Goed timen is vandaag belangrijker dan hopen.",
+        "De ochtend niet, de middag misschien.",
+        "Dit is een gok, maar geen slechte.",
+        "Met een beetje meewind kom je er.",
+    ],
+    NEE: [
+        "De lucht is vandaag al vol. Je was kan er niets meer bij.",
+        "Vandaag droogt je was vooral… in theorie.",
+        "Buiten hangen is vandaag buiten nat houden.",
+        "De lucht zegt: ik zit vol. Kom morgen maar terug.",
+        "Dit is het weer voor een wasmand, niet voor een waslijn.",
+        "Verdampen lukt pas weer als de lucht ruimte heeft.",
+        "Het kan wel, maar dan blijft het ‘net niet droog’.",
+        "Vandaag is het meer vochtig blijven dan droog worden.",
+        "Je was probeert te drogen in een spons. Succes.",
+        "Droogweer? De lucht heeft andere plannen.",
+        "Alles krijgt vandaag dezelfde status: klam.",
+        "De waslijn mag vrij nemen. De lucht ook.",
+    ],
 };
 
 export const verdictCopy: Record<'JA' | 'MISSCHIEN' | 'NEE', { label: string; transition: string }> = {
@@ -71,8 +116,8 @@ export const products: Product[] = [
         id: 'draagbare-wasdroger-elek',
         name: 'Draagbare wasdroger',
         description: '',
-        resultTitle: 'Geen muffe geur',
-        middelTitle: 'luchtcirculatie droger',
+        resultTitle: 'Past in kleine ruimte',
+        middelTitle: 'compacte wasdroger',
         ctaText: 'bekijk voorbeeld',
         imagePath: 'https://images.unsplash.com/photo-1545173153-4dc975765727?q=80&w=300&h=300&auto=format&fit=crop',
         shopUrl: 'https://partner.bol.com/click/click?p=2&t=url&s=1503974&f=TXL&url=https%3A%2F%2Fwww.bol.com%2Fnl%2Fnl%2Fp%2Fdraagbare-elektrische-droger-opvouwbare-droger-uv-sterilisator-8-uurs-timer-360-hetelucht-mini-droger-verstelbaar-ideaal-voor-thuis-op-reis-in-de-camper-en-in-compacte-wasruimtes%2F9300000241654694%2F&name=Draagbare%20elektrische%20droger%20&subid=Draagbare%20elektrische%20droger%20',
@@ -85,8 +130,8 @@ export const products: Product[] = [
         id: 'plafonddroogrek-elek',
         name: 'Plafonddroogrek',
         description: '',
-        resultTitle: 'Past in kleine ruimte',
-        middelTitle: 'compacte wasdroger',
+        resultTitle: 'Geen muffe geur',
+        middelTitle: 'luchtcirculatie droger',
         ctaText: 'bekijk voorbeeld',
         imagePath: 'https://images.unsplash.com/photo-1549400893-61ba4f4044a2?q=80&w=300&h=300&auto=format&fit=crop',
         shopUrl: 'https://partner.bol.com/click/click?p=2&t=url&s=1503974&f=TXL&url=https%3A%2F%2Fwww.bol.com%2Fnl%2Fnl%2Fp%2Ffoxydry-air-120-electrisch-plafonddroogrek-met-afstandsbediening-122-x-57-x-30-cm%2F9300000220471309%2F&name=Electrisch%20plafonddroogrek&subid=Electrisch%20plafonddroogrek',

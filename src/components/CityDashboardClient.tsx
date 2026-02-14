@@ -1,11 +1,11 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { getWeatherDescription, getWeatherIcon, type WeatherData, type HourlyForecast } from "@/lib/weather";
 import { getDryingVerdict, checkIfPrecipitating } from "@/lib/drying-logic";
-import { getProductsForCategory, verdictCopy, situationalAdvice } from "@/lib/products";
+import { getProductsForCategory, verdictCopy, situationalAdvice, verdictSentences } from "@/lib/products";
 import { AffiliateGrid } from "@/components/IndoorSolutions";
 import { Navbar } from "@/components/Navbar";
 
@@ -109,6 +109,12 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
     const isPrecipitating = checkIfPrecipitating(weather.current.weatherCode);
     const verdict = getDryingVerdict(weather.dryingScore, isPrecipitating);
 
+    const rotatingSentence = useMemo(() => {
+        if (!verdict) return "";
+        const sentences = verdictSentences[verdict.verdict];
+        return sentences[Math.floor(Math.random() * sentences.length)];
+    }, [verdict?.verdict]);
+
     const now = new Date();
     const upcomingHours = weather.hourly.filter((h: HourlyForecast) => {
         const date = new Date(h.time);
@@ -139,7 +145,7 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
                                     </div>
                                 </motion.div>
                                 <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className={`text-xl sm:text-2xl font-bold max-w-3xl mx-auto leading-tight mb-8 ${isDark ? 'text-white/80' : 'text-sky-900/80'}`}>
-                                    {verdict.subtitle}
+                                    {rotatingSentence}
                                 </motion.p>
                             </>
                         )}
@@ -153,13 +159,7 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
                             transition={{ delay: 0.4 }}
                             className="mb-12"
                         >
-                            {verdict.verdict === 'JA' ? (
-                                <div className="text-center py-6 opacity-40">
-                                    <p className={`text-sm font-bold ${isDark ? 'text-white' : 'text-sky-950'}`}>
-                                        Vandaag heb je geen hulpmiddelen nodig.
-                                    </p>
-                                </div>
-                            ) : (() => {
+                            {(() => {
                                 // Situational reasoning logic
                                 const isRaining = weather.current.precipitation > 0;
                                 const isVeryCold = weather.current.temperature < 5;
@@ -179,6 +179,8 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
                                     }
                                 }
 
+                                const products = getProductsForCategory(verdict.verdict);
+
                                 return (
                                     <div className="max-w-4xl mx-auto">
                                         <div className="text-center mb-6">
@@ -191,11 +193,19 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
                                                 </p>
                                             )}
                                         </div>
-                                        <AffiliateGrid
-                                            products={getProductsForCategory(verdict.verdict)}
-                                            title=""
-                                            reasonIcon={reasonIcon}
-                                        />
+                                        {products.length > 0 ? (
+                                            <AffiliateGrid
+                                                products={products}
+                                                title=""
+                                                reasonIcon={reasonIcon}
+                                            />
+                                        ) : verdict.verdict === 'JA' ? (
+                                            <div className="text-center py-6 opacity-40">
+                                                <p className={`text-sm font-bold ${isDark ? 'text-white' : 'text-sky-950'}`}>
+                                                    Vandaag heb je geen hulpmiddelen nodig.
+                                                </p>
+                                            </div>
+                                        ) : null}
                                     </div>
                                 );
                             })()}
