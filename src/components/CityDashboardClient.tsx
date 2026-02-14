@@ -148,12 +148,12 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.3 }}
-                                    className={`max-w-2xl mx-auto p-12 rounded-[48px] border-2 transition-all duration-500 mb-8 relative group
-                                        ${isDark ? 'bg-white/5 border-cyan-500/30' : 'bg-white border-sky-100 shadow-2xl shadow-sky-100'}
+                                    className={`max-w-xl mx-auto p-8 rounded-3xl border-2 transition-all duration-500 mb-8 relative
+                                        ${isDark ? 'bg-white/5 border-white/5' : 'bg-white border-sky-100 shadow-xl shadow-sky-500/5'}
                                     `}
                                 >
-                                    <p className={`text-2xl sm:text-3xl font-black leading-tight italic ${isDark ? 'text-white' : 'text-sky-950'}`}>
-                                        "{rotatingSentence}"
+                                    <p className={`text-xl font-bold leading-tight ${isDark ? 'text-white/90' : 'text-sky-950/90'}`}>
+                                        {rotatingSentence}
                                     </p>
                                 </motion.div>
                             </>
