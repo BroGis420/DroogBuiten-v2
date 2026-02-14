@@ -147,7 +147,7 @@ export function CityDashboardClient({ weather, cityInfo }: CityDashboardClientPr
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.3 }}
-                                    className={`max-w-xl mx-auto p-8 rounded-3xl border-2 transition-all duration-500 mb-8 relative
+                                    className={`max-w-xl mx-auto p-6 rounded-3xl border-2 transition-all duration-500 mb-8 relative
                                         ${isDark ? 'bg-white/5 border-white/5' : 'bg-white border-sky-100 shadow-xl shadow-sky-500/5'}
                                     `}
                                 >

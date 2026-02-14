@@ -66,7 +66,7 @@ export const verdictSentences: Record<'JA' | 'MISSCHIEN' | 'NEE', string[]> = {
         "Met een beetje meewind kom je er.",
     ],
     NEE: [
-        "De lucht is vandaag al vol. Je was kan er niets meer bij.",
+        "De lucht is vandaag al vol. Je was kan er niets meer kwijt.",
         "Vandaag droogt je was vooral… in theorie.",
         "Buiten hangen is vandaag buiten nat houden.",
         "De lucht zegt: ik zit vol. Kom morgen maar terug.",
